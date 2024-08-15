@@ -1,4 +1,4 @@
-﻿using CQRS.Core;
+﻿using CQRS.Core.Events;
 
 namespace Post.Common.Events.Posts;
 

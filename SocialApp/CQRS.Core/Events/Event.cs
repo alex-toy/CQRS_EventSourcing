@@ -1,4 +1,4 @@
-﻿namespace CQRS.Core;
+﻿namespace CQRS.Core.Events;
 
 public abstract class Event : Message
 {
