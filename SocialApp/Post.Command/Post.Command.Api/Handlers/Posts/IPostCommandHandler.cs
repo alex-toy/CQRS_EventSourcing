@@ -1,16 +1,14 @@
-﻿using Post.Command.Api.Commands.Comments;
+﻿using Post.Command.Api.Commands;
+using Post.Command.Api.Commands.Comments;
 using Post.Command.Api.Commands.Posts;
 
-namespace Post.Command.Api.Commands;
+namespace Post.Command.Api.Handlers.Posts;
 
-public interface ICommandHandler
+public interface IPostCommandHandler
 {
     Task HandleAsync(CreatePostCommand command);
     Task HandleAsync(UpdatePostCommand command);
     Task HandleAsync(LikePostCommand command);
-    Task HandleAsync(CreateCommentCommand command);
-    Task HandleAsync(UpdateCommentCommand command);
-    Task HandleAsync(DeleteCommentCommand command);
     Task HandleAsync(DeletePostCommand command);
     Task HandleAsync(RestoreReadDbCommand command);
 }
