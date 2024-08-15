@@ -19,7 +19,8 @@ public class QueryDispatcher : IQueryDispatcher<PostDb>
 
     public async Task<List<PostDb>> SendAsync(BaseQuery query)
     {
-        if (_handlers.TryGetValue(query.GetType(), out Func<BaseQuery, Task<List<PostDb>>> handler))
+        Type queryType = query.GetType();
+        if (_handlers.TryGetValue(queryType, out Func<BaseQuery, Task<List<PostDb>>> handler))
         {
             return await handler(query);
         }

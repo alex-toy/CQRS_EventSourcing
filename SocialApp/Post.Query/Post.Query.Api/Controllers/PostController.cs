@@ -20,7 +20,7 @@ namespace Post.Query.Api.Controllers
             _queryDispatcher = queryDispatcher;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllPosts")]
         public async Task<ActionResult> GetAllPostsAsync()
         {
             try
@@ -35,7 +35,7 @@ namespace Post.Query.Api.Controllers
             }
         }
 
-        [HttpGet("byId/{postId}")]
+        [HttpGet("GetByPostId/{postId}")]
         public async Task<ActionResult> GetByPostIdAsync(Guid postId)
         {
             try
@@ -57,7 +57,7 @@ namespace Post.Query.Api.Controllers
             }
         }
 
-        [HttpGet("byAuthor/{author}")]
+        [HttpGet("GetPostsByAuthor/{author}")]
         public async Task<ActionResult> GetPostsByAuthorAsync(string author)
         {
             try
@@ -72,7 +72,7 @@ namespace Post.Query.Api.Controllers
             }
         }
 
-        [HttpGet("withComments")]
+        [HttpGet("GetPostsWithComments")]
         public async Task<ActionResult> GetPostsWithCommentsAsync()
         {
             try
@@ -87,7 +87,7 @@ namespace Post.Query.Api.Controllers
             }
         }
 
-        [HttpGet("withLikes/{numberOfLikes}")]
+        [HttpGet("GetPostsWithLikes/{numberOfLikes}")]
         public async Task<ActionResult> GetPostsWithLikesAsync(int numberOfLikes)
         {
             try

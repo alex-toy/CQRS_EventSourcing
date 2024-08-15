@@ -42,7 +42,7 @@ docker run -d --name sql-container --network mydockernetwork --restart always -e
 
 <img src="/pictures/images.png" title="docker images"  width="900"> 
 
-The connect to the server using the following credentials :
+Connect to the server using the following credentials :
 - Server name : localhost
 - no database name
 - user name : sa
