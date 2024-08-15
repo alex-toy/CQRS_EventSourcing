@@ -1,6 +1,6 @@
 ﻿namespace CQRS.Core.Queries;
 
-public abstract class Query
+public abstract class BaseQuery
 {
 
 }
