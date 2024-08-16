@@ -50,7 +50,7 @@ namespace Post.Query.Infrastructure.Repositories
                     .FirstOrDefaultAsync(x => x.PostId == postId);
         }
 
-        public async Task<List<PostDb>> ListAllAsync()
+        public async Task<List<PostDb>> GetAllAsync()
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Posts.AsNoTracking()

@@ -15,7 +15,7 @@ public class PostQueryHandler : IPostQueryHandler
 
     public async Task<List<PostDb>> HandleAsync(GetAllPostsQuery query)
     {
-        return await _postRepository.ListAllAsync();
+        return await _postRepository.GetAllAsync();
     }
 
     public async Task<List<PostDb>> HandleAsync(GetPostByIdQuery query)

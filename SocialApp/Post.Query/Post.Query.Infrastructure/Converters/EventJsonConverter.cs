@@ -1,6 +1,7 @@
 ﻿using CQRS.Core.Events;
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
+using Post.Common.Events.Orders;
 using Post.Common.Events.Posts;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -34,10 +35,15 @@ public class EventJsonConverter : JsonConverter<Event>
             nameof(PostCreatedEvent) => JsonSerializer.Deserialize<PostCreatedEvent>(json, options),
             nameof(PostUpdatedEvent) => JsonSerializer.Deserialize<PostUpdatedEvent>(json, options),
             nameof(PostLikedEvent) => JsonSerializer.Deserialize<PostLikedEvent>(json, options),
+
             nameof(CommentCreatedEvent) => JsonSerializer.Deserialize<CommentCreatedEvent>(json, options),
             nameof(CommentUpdatedEvent) => JsonSerializer.Deserialize<CommentUpdatedEvent>(json, options),
             nameof(CommentDeletedEvent) => JsonSerializer.Deserialize<CommentDeletedEvent>(json, options),
             nameof(PostDeletedEvent) => JsonSerializer.Deserialize<PostDeletedEvent>(json, options),
+
+            nameof(OrderCreatedEvent) => JsonSerializer.Deserialize<PostCreatedEvent>(json, options),
+            nameof(OrderUpdatedEvent) => JsonSerializer.Deserialize<PostUpdatedEvent>(json, options),
+            nameof(OrderDeletedEvent) => JsonSerializer.Deserialize<PostDeletedEvent>(json, options),
             _ => throw new JsonException($"{typeDiscriminator} is not supported yet!")
         };
     }

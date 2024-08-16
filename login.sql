@@ -1,4 +1,4 @@
-﻿﻿USE SocialMedia
+USE SocialMedia
 GO
 
 IF NOT EXISTS ( SELECT * FROM sys.server_principals WHERE name = 'SMUser') BEGIN
