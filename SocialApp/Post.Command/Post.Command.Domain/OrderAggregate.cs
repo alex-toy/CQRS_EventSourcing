@@ -1,6 +1,4 @@
 ﻿using CQRS.Core.Domain;
-using Post.Common.Comments;
-using Post.Common.Events.Comments;
 using Post.Common.Events.Orders;
 
 namespace Post.Command.Domain;
@@ -86,51 +84,51 @@ public class OrderAggregate : AggregateRoot
         });
     }
 
-    public void AddComment(string comment, string username)
-    {
-        if (string.IsNullOrWhiteSpace(comment))
-        {
-            throw new InvalidOperationException($"The value of {nameof(comment)} cannot be null or empty. Please provide a valid {nameof(comment)}!");
-        }
+    //public void AddComment(string comment, string username)
+    //{
+    //    if (string.IsNullOrWhiteSpace(comment))
+    //    {
+    //        throw new InvalidOperationException($"The value of {nameof(comment)} cannot be null or empty. Please provide a valid {nameof(comment)}!");
+    //    }
 
-        RaiseEvent(new CommentCreatedEvent
-        {
-            Id = _id,
-            CommentId = Guid.NewGuid(),
-            Comment = comment,
-            Username = username,
-            CommentDate = DateTime.Now
-        });
-    }
+    //    RaiseEvent(new CommentCreatedEvent
+    //    {
+    //        Id = _id,
+    //        CommentId = Guid.NewGuid(),
+    //        Comment = comment,
+    //        Username = username,
+    //        CommentDate = DateTime.Now
+    //    });
+    //}
 
-    public void EditComment(Guid commentId, string comment, string username)
-    {
-        if (!_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
-        {
-            throw new InvalidOperationException("You are not allowed to edit a comment that was made by another user!");
-        }
+    //public void EditComment(Guid commentId, string comment, string username)
+    //{
+    //    if (!_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+    //    {
+    //        throw new InvalidOperationException("You are not allowed to edit a comment that was made by another user!");
+    //    }
 
-        RaiseEvent(new CommentUpdatedEvent
-        {
-            Id = _id,
-            CommentId = commentId,
-            Comment = comment,
-            Username = username,
-            EditDate = DateTime.Now
-        });
-    }
+    //    RaiseEvent(new CommentUpdatedEvent
+    //    {
+    //        Id = _id,
+    //        CommentId = commentId,
+    //        Comment = comment,
+    //        Username = username,
+    //        EditDate = DateTime.Now
+    //    });
+    //}
 
-    public void RemoveComment(Guid commentId, string username)
-    {
-        if (!_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
-        {
-            throw new InvalidOperationException("You are not allowed to remove a comment that was made by another user!");
-        }
+    //public void RemoveComment(Guid commentId, string username)
+    //{
+    //    if (!_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+    //    {
+    //        throw new InvalidOperationException("You are not allowed to remove a comment that was made by another user!");
+    //    }
 
-        RaiseEvent(new CommentDeletedEvent
-        {
-            Id = _id,
-            CommentId = commentId
-        });
-    }
+    //    RaiseEvent(new CommentDeletedEvent
+    //    {
+    //        Id = _id,
+    //        CommentId = commentId
+    //    });
+    //}
 }

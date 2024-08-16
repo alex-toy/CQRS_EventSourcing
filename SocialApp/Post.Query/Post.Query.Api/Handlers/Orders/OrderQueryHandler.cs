@@ -20,7 +20,7 @@ public class OrderQueryHandler : IOrderQueryHandler
 
     public async Task<List<OrderDb>> HandleAsync(GetOrderByIdQuery query)
     {
-        var post = await _orderRepository.GetByIdAsync(query.Id);
-        return new List<OrderDb> { post };
+        OrderDb order = await _orderRepository.GetByIdAsync(query.Id);
+        return new List<OrderDb> { order };
     }
 }

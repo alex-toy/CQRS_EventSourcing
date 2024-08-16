@@ -8,14 +8,12 @@ using System.Text.Json;
 
 namespace Post.Query.Infrastructure.Consumers;
 
-public class EventConsumer : IEventConsumer
+public class EventConsumer<T> : IEventConsumer where T : IEventHandler
 {
     private readonly ConsumerConfig _config;
-    private readonly IEventHandler _eventHandler;
+    private readonly T _eventHandler;
 
-    public EventConsumer(
-        IOptions<ConsumerConfig> config,
-        IEventHandler eventHandler)
+    public EventConsumer(IOptions<ConsumerConfig> config, T eventHandler)
     {
         _config = config.Value;
         _eventHandler = eventHandler;
@@ -32,9 +30,9 @@ public class EventConsumer : IEventConsumer
 
         while (true)
         {
-            var consumeResult = consumer.Consume();
+            ConsumeResult<string, string> consumeResult = consumer.Consume();
 
-            if (consumeResult?.Message == null) continue;
+            if (consumeResult?.Message is null) continue;
 
             JsonSerializerOptions options = new JsonSerializerOptions { Converters = { new EventJsonConverter() } };
             Event? @event = JsonSerializer.Deserialize<Event>(consumeResult.Message.Value, options);

@@ -4,14 +4,14 @@ using Post.Common.Events.Posts;
 using Post.Query.Domain.Entities;
 using Post.Query.Domain.Repositories;
 
-namespace Post.Query.Infrastructure.Handlers;
+namespace Post.Query.Infrastructure.Handlers.Posts;
 
-public class EventHandler : IEventHandler
+public class PostEventHandler : IPostEventHandler
 {
     private readonly IPostRepository _postRepository;
     private readonly ICommentRepository _commentRepository;
 
-    public EventHandler(IPostRepository postRepository, ICommentRepository commentRepository)
+    public PostEventHandler(IPostRepository postRepository, ICommentRepository commentRepository)
     {
         _postRepository = postRepository;
         _commentRepository = commentRepository;
