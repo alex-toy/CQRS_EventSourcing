@@ -1,10 +1,9 @@
 ﻿using CQRS.Core.Domain;
 using CQRS.Core.Events;
-using Post.Command.Domain;
 
 namespace Post.Command.Infrastructure;
 
-public class EventSourcingHandler : IEventSourcingHandler<PostAggregate>
+public class EventSourcingHandler<T> : IEventSourcingHandler<T> where T : AggregateRoot, new()
 {
     private readonly IEventStore _eventStore;
     private readonly IEventProducer _eventProducer;
@@ -15,9 +14,9 @@ public class EventSourcingHandler : IEventSourcingHandler<PostAggregate>
         _eventProducer = eventProducer;
     }
 
-    public async Task<PostAggregate> GetByIdAsync(Guid aggregateId)
+    public async Task<T> GetByIdAsync(Guid aggregateId)
     {
-        PostAggregate aggregate = new ();
+        T aggregate = new ();
         List<Event> events = await _eventStore.GetEventsAsync(aggregateId);
 
         if (events is null || !events.Any()) return aggregate;
@@ -36,7 +35,7 @@ public class EventSourcingHandler : IEventSourcingHandler<PostAggregate>
 
         foreach (var aggregateId in aggregateIds)
         {
-            PostAggregate aggregate = await GetByIdAsync(aggregateId);
+            T aggregate = await GetByIdAsync(aggregateId);
 
             if (aggregate is null || !aggregate.Active) continue;
 

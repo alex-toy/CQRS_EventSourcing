@@ -8,6 +8,11 @@ public class CommentCommandHandler : ICommentCommandHandler
 {
     private readonly IEventSourcingHandler<PostAggregate> _eventSourcingHandler;
 
+    public CommentCommandHandler(IEventSourcingHandler<PostAggregate> eventSourcingHandler)
+    {
+        _eventSourcingHandler = eventSourcingHandler;
+    }
+
     public async Task HandleAsync(CreateCommentCommand command)
     {
         PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);

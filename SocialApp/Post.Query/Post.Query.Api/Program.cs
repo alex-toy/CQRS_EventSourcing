@@ -2,8 +2,9 @@ using Confluent.Kafka;
 using CQRS.Core.Events;
 using CQRS.Core.Queries;
 using Microsoft.EntityFrameworkCore;
+using Post.Query.Api.Handlers.Orders;
 using Post.Query.Api.Handlers.Posts;
-using Post.Query.Api.Queries;
+using Post.Query.Api.Queries.Orders;
 using Post.Query.Api.Queries.Posts;
 using Post.Query.Domain.Entities;
 using Post.Query.Domain.Repositories;
@@ -33,7 +34,7 @@ builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection(name
 builder.Services.AddScoped<IEventConsumer, EventConsumer>();
 
 // register query handler methods
-QueryDispatcher dispatcher = new ();
+QueryDispatcher<PostDb> dispatcher = new();
 IPostQueryHandler queryHandler = builder.Services.BuildServiceProvider().GetRequiredService<IPostQueryHandler>();
 dispatcher.RegisterHandler<GetAllPostsQuery>(queryHandler.HandleAsync);
 dispatcher.RegisterHandler<GetPostByIdQuery>(queryHandler.HandleAsync);
@@ -41,6 +42,12 @@ dispatcher.RegisterHandler<GetPostsByAuthorQuery>(queryHandler.HandleAsync);
 dispatcher.RegisterHandler<GetPostsWithCommentsQuery>(queryHandler.HandleAsync);
 dispatcher.RegisterHandler<GetPostsWithLikesQuery>(queryHandler.HandleAsync);
 builder.Services.AddSingleton<IQueryDispatcher<PostDb>>(_ => dispatcher);
+
+QueryDispatcher<OrderDb> orderDispatcher = new();
+IOrderQueryHandler orderQueryHandler = builder.Services.BuildServiceProvider().GetRequiredService<IOrderQueryHandler>();
+orderDispatcher.RegisterHandler<GetAllOrdersQuery>(orderQueryHandler.HandleAsync);
+orderDispatcher.RegisterHandler<GetOrderByIdQuery>(orderQueryHandler.HandleAsync);
+builder.Services.AddSingleton<IQueryDispatcher<OrderDb>>(_ => orderDispatcher);
 
 builder.Services.AddControllers();
 builder.Services.AddHostedService<ConsumerHostedService>();

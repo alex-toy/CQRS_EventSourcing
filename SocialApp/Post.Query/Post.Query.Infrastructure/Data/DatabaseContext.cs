@@ -11,4 +11,5 @@ public class DatabaseContext : DbContext
 
     public DbSet<PostDb> Posts { get; set; }
     public DbSet<CommentDb> Comments { get; set; }
+    public DbSet<OrderDb> Orders { get; set; }
 }

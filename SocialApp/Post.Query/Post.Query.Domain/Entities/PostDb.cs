@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Post.Query.Domain.Entities;
 
 [Table("Post", Schema = "dbo")]
-public class PostDb
+public class PostDb : Entity
 {
     [Key]
     public Guid PostId { get; set; }

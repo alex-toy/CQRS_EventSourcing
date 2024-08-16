@@ -7,6 +7,7 @@ public abstract class AggregateRoot
 {
     protected Guid _id;
     private readonly List<Event> _changes = new();
+    public virtual bool Active { get; set; }
 
     public Guid Id
     {
@@ -14,6 +15,11 @@ public abstract class AggregateRoot
     }
 
     public int Version { get; set; } = -1;
+
+    public void ReplayEvents(IEnumerable<Event> events)
+    {
+        foreach (var @event in events) ApplyChange(@event, false);
+    }
 
     public IEnumerable<Event> GetUncommittedChanges()
     {
@@ -42,10 +48,5 @@ public abstract class AggregateRoot
     protected void RaiseEvent(Event @event)
     {
         ApplyChange(@event, true);
-    }
-
-    public void ReplayEvents(IEnumerable<Event> events)
-    {
-        foreach (var @event in events) ApplyChange(@event, false);
     }
 }

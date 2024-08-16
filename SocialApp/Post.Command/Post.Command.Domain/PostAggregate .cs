@@ -11,14 +11,13 @@ public class PostAggregate : AggregateRoot
     private string _author;
     private readonly Dictionary<Guid, Tuple<string, string>> _comments = new();
 
-    public bool Active
+    public override bool Active
     {
         get => _active; set => _active = value;
     }
 
     public PostAggregate()
     {
-
     }
 
     public PostAggregate(Guid id, string author, string message)

@@ -16,13 +16,19 @@ using Post.Common.Events.Posts;
 var builder = WebApplication.CreateBuilder(args);
 
 BsonClassMap.RegisterClassMap<Event>();
+
 BsonClassMap.RegisterClassMap<PostCreatedEvent>();
 BsonClassMap.RegisterClassMap<PostUpdatedEvent>();
 BsonClassMap.RegisterClassMap<PostLikedEvent>();
+BsonClassMap.RegisterClassMap<PostDeletedEvent>();
+
 BsonClassMap.RegisterClassMap<CommentCreatedEvent>();
 BsonClassMap.RegisterClassMap<CommentUpdatedEvent>();
 BsonClassMap.RegisterClassMap<CommentDeletedEvent>();
-BsonClassMap.RegisterClassMap<PostDeletedEvent>();
+
+//BsonClassMap.RegisterClassMap<OrderCreatedEvent>();
+//BsonClassMap.RegisterClassMap<OrderUpdatedEvent>();
+//BsonClassMap.RegisterClassMap<OrderDeletedEvent>();
 
 // Add services to the container.
 builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection(nameof(MongoDbConfig)));
@@ -30,8 +36,10 @@ builder.Services.Configure<ProducerConfig>(builder.Configuration.GetSection(name
 builder.Services.AddScoped<IEventStoreRepository, EventStoreRepository>();
 builder.Services.AddScoped<IEventProducer, EventProducer>();
 builder.Services.AddScoped<IEventStore, EventStore>();
-builder.Services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler>();
+
+builder.Services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler<PostAggregate>>();
 builder.Services.AddScoped<IPostCommandHandler, PostCommandHandler>();
+
 builder.Services.AddScoped<ICommentCommandHandler, CommentCommandHandler>();
 
 // register command handler methods
@@ -53,6 +61,13 @@ builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
+
+
+
+
 
 var app = builder.Build();
 

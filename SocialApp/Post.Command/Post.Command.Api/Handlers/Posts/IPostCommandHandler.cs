@@ -1,5 +1,4 @@
 ﻿using Post.Command.Api.Commands;
-using Post.Command.Api.Commands.Comments;
 using Post.Command.Api.Commands.Posts;
 
 namespace Post.Command.Api.Handlers.Posts;

@@ -3,11 +3,11 @@ using Post.Query.Domain.Entities;
 
 namespace Post.Query.Infrastructure.Dispatchers;
 
-public class QueryDispatcher : IQueryDispatcher<PostDb>
+public class QueryDispatcher<T> : IQueryDispatcher<T> where T : Entity
 {
-    private readonly Dictionary<Type, Func<BaseQuery, Task<List<PostDb>>>> _handlers = new();
+    private readonly Dictionary<Type, Func<BaseQuery, Task<List<T>>>> _handlers = new();
 
-    public void RegisterHandler<TQuery>(Func<TQuery, Task<List<PostDb>>> handler) where TQuery : BaseQuery
+    public void RegisterHandler<TQuery>(Func<TQuery, Task<List<T>>> handler) where TQuery : BaseQuery
     {
         if (_handlers.ContainsKey(typeof(TQuery)))
         {
@@ -17,10 +17,10 @@ public class QueryDispatcher : IQueryDispatcher<PostDb>
         _handlers.Add(typeof(TQuery), x => handler((TQuery)x));
     }
 
-    public async Task<List<PostDb>> SendAsync(BaseQuery query)
+    public async Task<List<T>> SendAsync(BaseQuery query)
     {
         Type queryType = query.GetType();
-        if (_handlers.TryGetValue(queryType, out Func<BaseQuery, Task<List<PostDb>>> handler))
+        if (_handlers.TryGetValue(queryType, out Func<BaseQuery, Task<List<T>>> handler))
         {
             return await handler(query);
         }

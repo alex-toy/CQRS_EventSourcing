@@ -40,7 +40,7 @@ docker run -it -d --name mongo-container -p 27017:27017 --network mydockernetwor
 docker run -d --name sql-container --network mydockernetwork --restart always -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=$tr0ngS@P@ssw0rd02' -e 'MSSQL_PID=Express' -p 1433:1433 mcr.microsoft.com/mssql/server:2017-latest-ubuntu 
 ```
 
-<img src="/pictures/images.png" title="docker images"  width="900"> 
+<img src="/pictures/docker.png" title="docker images"  width="900"> 
 
 Connect to the server using the following credentials :
 - Server name : localhost
