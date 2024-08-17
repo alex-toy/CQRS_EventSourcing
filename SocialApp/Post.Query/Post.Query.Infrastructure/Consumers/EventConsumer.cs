@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using CQRS.Core.Events;
 using Microsoft.Extensions.Options;
+using Post.Common.Events.Orders;
 using Post.Query.Infrastructure.Converters;
 using Post.Query.Infrastructure.Handlers;
 using System.Reflection;

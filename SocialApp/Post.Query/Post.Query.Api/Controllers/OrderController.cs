@@ -25,7 +25,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                var posts = await _queryDispatcher.SendAsync(new GetAllOrdersQuery());
+                var posts = await _queryDispatcher.HandleAsync(new GetAllOrdersQuery());
                 return NormalResponse(posts);
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                List<OrderDb>? posts = await _queryDispatcher.SendAsync(new GetOrderByIdQuery { Id = orderId });
+                List<OrderDb>? posts = await _queryDispatcher.HandleAsync(new GetOrderByIdQuery { Id = orderId });
 
                 if (posts is null || !posts.Any()) return NoContent();
 

@@ -1,4 +1,5 @@
-﻿using CQRS.Core.Queries;
+﻿using CQRS.Core.Events;
+using CQRS.Core.Queries;
 using Microsoft.EntityFrameworkCore;
 using Post.Query.Api.Handlers.Orders;
 using Post.Query.Api.Handlers.Posts;
@@ -6,6 +7,7 @@ using Post.Query.Api.Queries.Orders;
 using Post.Query.Api.Queries.Posts;
 using Post.Query.Domain.Entities;
 using Post.Query.Domain.Repositories;
+using Post.Query.Infrastructure.Consumers;
 using Post.Query.Infrastructure.Data;
 using Post.Query.Infrastructure.Dispatchers;
 using Post.Query.Infrastructure.Handlers.Orders;
@@ -48,6 +50,8 @@ public static class WebApplicationBuilderExtensions
         postDispatcher.RegisterHandler<GetPostsWithLikesQuery>(postQueryHandler.HandleAsync);
 
         builder.Services.AddSingleton<IQueryDispatcher<PostDb>>(_ => postDispatcher);
+
+        builder.Services.AddScoped<IEventConsumer, EventConsumer<IPostEventHandler>>();
     }
 
     public static void ConfigureOrders(this WebApplicationBuilder builder)
@@ -66,6 +70,8 @@ public static class WebApplicationBuilderExtensions
         orderDispatcher.RegisterHandler<GetOrderByIdQuery>(orderQueryHandler.HandleAsync);
 
         builder.Services.AddSingleton<IQueryDispatcher<OrderDb>>(_ => orderDispatcher);
+
+        builder.Services.AddScoped<IEventConsumer, EventConsumer<IOrderEventHandler>>();
     }
 
     public static void Configure(this WebApplicationBuilder builder)

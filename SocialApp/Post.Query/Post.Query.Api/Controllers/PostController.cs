@@ -25,7 +25,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                var posts = await _queryDispatcher.SendAsync(new GetAllPostsQuery());
+                List<PostDb> posts = await _queryDispatcher.HandleAsync(new GetAllPostsQuery());
                 return NormalResponse(posts);
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                List<PostDb>? posts = await _queryDispatcher.SendAsync(new GetPostByIdQuery { Id = postId });
+                List<PostDb>? posts = await _queryDispatcher.HandleAsync(new GetPostByIdQuery { Id = postId });
 
                 if (posts is null || !posts.Any()) return NoContent();
 
@@ -62,7 +62,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                List<PostDb> posts = await _queryDispatcher.SendAsync(new GetPostsByAuthorQuery { Author = author });
+                List<PostDb> posts = await _queryDispatcher.HandleAsync(new GetPostsByAuthorQuery { Author = author });
                 return NormalResponse(posts);
             }
             catch (Exception ex)
@@ -77,7 +77,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                List<PostDb> posts = await _queryDispatcher.SendAsync(new GetPostsWithCommentsQuery());
+                List<PostDb> posts = await _queryDispatcher.HandleAsync(new GetPostsWithCommentsQuery());
                 return NormalResponse(posts);
             }
             catch (Exception ex)
@@ -92,7 +92,7 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                List<PostDb> posts = await _queryDispatcher.SendAsync(new GetPostsWithLikesQuery { NumberOfLikes = numberOfLikes });
+                List<PostDb> posts = await _queryDispatcher.HandleAsync(new GetPostsWithLikesQuery { NumberOfLikes = numberOfLikes });
                 return NormalResponse(posts);
             }
             catch (Exception ex)

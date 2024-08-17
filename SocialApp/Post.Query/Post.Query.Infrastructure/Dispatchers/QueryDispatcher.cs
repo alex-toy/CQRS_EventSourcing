@@ -17,7 +17,7 @@ public class QueryDispatcher<T> : IQueryDispatcher<T> where T : Entity
         _handlers.Add(typeof(TQuery), x => handler((TQuery)x));
     }
 
-    public async Task<List<T>> SendAsync(BaseQuery query)
+    public async Task<List<T>> HandleAsync(BaseQuery query)
     {
         Type queryType = query.GetType();
         if (_handlers.TryGetValue(queryType, out Func<BaseQuery, Task<List<T>>> handler))
