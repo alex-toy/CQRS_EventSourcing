@@ -15,7 +15,7 @@ public class OrderCommandHandler : IOrderCommandHandler
 
     public async Task HandleAsync(CreateOrderCommand command)
     {
-        OrderAggregate aggregate = new(command.Id, command.ItemId, command.Quantity);
+        OrderAggregate aggregate = new(command.Id, command.Author, command.ItemId, command.Quantity);
 
         await _eventSourcingHandler.SaveAsync(aggregate);
     }

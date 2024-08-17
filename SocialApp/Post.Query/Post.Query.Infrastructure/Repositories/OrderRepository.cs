@@ -14,10 +14,10 @@ namespace Post.Query.Infrastructure.Repositories
             _contextFactory = contextFactory;
         }
 
-        public async Task CreateAsync(OrderDb post)
+        public async Task CreateAsync(OrderDb order)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
-            context.Orders.Add(post);
+            context.Orders.Add(order);
 
             _ = await context.SaveChangesAsync();
         }

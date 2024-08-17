@@ -1,6 +1,10 @@
 using Confluent.Kafka;
+using CQRS.Core.Events;
 using Post.Query.Api;
 using Post.Query.Infrastructure.Consumers;
+using Post.Query.Infrastructure.Handlers;
+using Post.Query.Infrastructure.Handlers.Orders;
+using Post.Query.Infrastructure.Handlers.Posts;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +14,13 @@ builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection(name
 
 builder.ConfigurePosts();
 
-//builder.ConfigureOrders();
+builder.ConfigureOrders();
+
+builder.Services
+    .AddTransient<IEventHandler, PostEventHandler>()
+    .AddTransient<IEventHandler, OrderEventHandler>();
+
+builder.Services.AddScoped<IEventConsumer, EventConsumer>();
 
 
 builder.Services.AddControllers();

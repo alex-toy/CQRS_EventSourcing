@@ -41,9 +41,10 @@ public class EventJsonConverter : JsonConverter<Event>
             nameof(CommentDeletedEvent) => JsonSerializer.Deserialize<CommentDeletedEvent>(json, options),
             nameof(PostDeletedEvent) => JsonSerializer.Deserialize<PostDeletedEvent>(json, options),
 
-            nameof(OrderCreatedEvent) => JsonSerializer.Deserialize<PostCreatedEvent>(json, options),
-            nameof(OrderUpdatedEvent) => JsonSerializer.Deserialize<PostUpdatedEvent>(json, options),
-            nameof(OrderDeletedEvent) => JsonSerializer.Deserialize<PostDeletedEvent>(json, options),
+            nameof(OrderCreatedEvent) => JsonSerializer.Deserialize<OrderCreatedEvent>(json, options),
+            nameof(OrderUpdatedEvent) => JsonSerializer.Deserialize<OrderUpdatedEvent>(json, options),
+            nameof(OrderDeletedEvent) => JsonSerializer.Deserialize<OrderDeletedEvent>(json, options),
+
             _ => throw new JsonException($"{typeDiscriminator} is not supported yet!")
         };
     }

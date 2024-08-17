@@ -12,11 +12,12 @@ public class OrderAggregate : AggregateRoot
     {
     }
 
-    public OrderAggregate(Guid id, Guid itemId, int quantity)
+    public OrderAggregate(Guid id, string author, Guid itemId, int quantity)
     {
         RaiseEvent(new OrderCreatedEvent
         {
             Id = id,
+            Author = author,
             Quantity = quantity,
             ItemId = itemId
         });

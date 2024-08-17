@@ -51,13 +51,11 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddScoped<IEventStore, EventStore>();
     }
 
-    public static void ConfigurePosts(this WebApplicationBuilder builder)
+    public static void ConfigurePosts(this WebApplicationBuilder builder, CommandDispatcher dispatcher)
     {
         builder.Services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler<PostAggregate>>();
         builder.Services.AddScoped<IPostCommandHandler, PostCommandHandler>();
         builder.Services.AddScoped<ICommentCommandHandler, CommentCommandHandler>();
-
-        CommandDispatcher dispatcher = new();
 
         IPostCommandHandler postCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IPostCommandHandler>();
         dispatcher.RegisterHandler<CreatePostCommand>(postCommandHandler.HandleAsync);
@@ -69,22 +67,16 @@ public static class WebApplicationBuilderExtensions
         dispatcher.RegisterHandler<CreateCommentCommand>(commentCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<UpdateCommentCommand>(commentCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<DeleteCommentCommand>(commentCommandHandler.HandleAsync);
-
-        builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
     }
 
-    public static void ConfigureOrders(this WebApplicationBuilder builder)
+    public static void ConfigureOrders(this WebApplicationBuilder builder, CommandDispatcher dispatcher)
     {
         builder.Services.AddScoped<IEventSourcingHandler<OrderAggregate>, EventSourcingHandler<OrderAggregate>>();
         builder.Services.AddScoped<IOrderCommandHandler, OrderCommandHandler>();
-
-        CommandDispatcher dispatcher = new();
 
         IOrderCommandHandler orderCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IOrderCommandHandler>();
         dispatcher.RegisterHandler<CreateOrderCommand>(orderCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<UpdateOrderCommand>(orderCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<DeleteOrderCommand>(orderCommandHandler.HandleAsync);
-
-        builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
     }
 }

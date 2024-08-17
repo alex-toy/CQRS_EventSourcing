@@ -51,7 +51,7 @@ public static class WebApplicationBuilderExtensions
 
         builder.Services.AddSingleton<IQueryDispatcher<PostDb>>(_ => postDispatcher);
 
-        builder.Services.AddScoped<IEventConsumer, EventConsumer<IPostEventHandler>>();
+        //builder.Services.AddScoped<IEventConsumer, EventConsumer<IPostEventHandler>>();
     }
 
     public static void ConfigureOrders(this WebApplicationBuilder builder)
@@ -71,7 +71,7 @@ public static class WebApplicationBuilderExtensions
 
         builder.Services.AddSingleton<IQueryDispatcher<OrderDb>>(_ => orderDispatcher);
 
-        builder.Services.AddScoped<IEventConsumer, EventConsumer<IOrderEventHandler>>();
+        //builder.Services.AddScoped<IEventConsumer, EventConsumer<IOrderEventHandler>>();
     }
 
     public static void Configure(this WebApplicationBuilder builder)

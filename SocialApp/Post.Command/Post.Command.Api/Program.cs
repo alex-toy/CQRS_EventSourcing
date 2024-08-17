@@ -1,4 +1,6 @@
+using CQRS.Core.Commands;
 using Post.Command.Api;
+using Post.Command.Infrastructure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +9,12 @@ WebApplicationBuilderExtensions.ConfigureBson();
 // Add services to the container.
 builder.ConfigureMongo();
 builder.ConfigureEventStore();
-//builder.ConfigurePosts();
-builder.ConfigureOrders();
+CommandDispatcher dispatcher = new();
+
+builder.ConfigurePosts(dispatcher);
+builder.ConfigureOrders(dispatcher);
+
+builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

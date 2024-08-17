@@ -1,7 +1,6 @@
 ﻿using Confluent.Kafka;
 using CQRS.Core.Events;
 using Microsoft.Extensions.Options;
-using Post.Common.Events.Orders;
 using Post.Query.Infrastructure.Converters;
 using Post.Query.Infrastructure.Handlers;
 using System.Reflection;
@@ -9,15 +8,15 @@ using System.Text.Json;
 
 namespace Post.Query.Infrastructure.Consumers;
 
-public class EventConsumer<T> : IEventConsumer where T : IEventHandler
+public class EventConsumer : IEventConsumer
 {
     private readonly ConsumerConfig _config;
-    private readonly T _eventHandler;
+    private readonly IEnumerable<IEventHandler> _eventHandlers;
 
-    public EventConsumer(IOptions<ConsumerConfig> config, T eventHandler)
+    public EventConsumer(IOptions<ConsumerConfig> config, IEnumerable<IEventHandler> eventHandlers)
     {
         _config = config.Value;
-        _eventHandler = eventHandler;
+        _eventHandlers = eventHandlers;
     }
 
     public void Consume(string topic)
@@ -37,14 +36,22 @@ public class EventConsumer<T> : IEventConsumer where T : IEventHandler
 
             JsonSerializerOptions options = new JsonSerializerOptions { Converters = { new EventJsonConverter() } };
             Event? @event = JsonSerializer.Deserialize<Event>(consumeResult.Message.Value, options);
-            MethodInfo? handlerMethod = _eventHandler.GetType().GetMethod("On", new Type[] { @event.GetType() });
+
+            int index = 0;
+            MethodInfo? handlerMethod = null;
+            foreach(IEventHandler eventHandler in _eventHandlers)
+            {
+                handlerMethod = eventHandler.GetType().GetMethod("On", new Type[] { @event.GetType() });
+                if (handlerMethod is not null) break;
+                index++;
+            }
 
             if (handlerMethod is null)
             {
                 throw new ArgumentNullException(nameof(handlerMethod), "Could not find event handler method!");
             }
 
-            handlerMethod.Invoke(_eventHandler, new object[] { @event });
+            handlerMethod.Invoke(_eventHandlers.ToArray()[index], new object[] { @event });
             consumer.Commit(consumeResult);
         }
     }
