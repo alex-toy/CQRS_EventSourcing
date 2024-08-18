@@ -1,4 +1,5 @@
-﻿using CQRS.Core.Events;
+﻿using CQRS.Core.Domain;
+using CQRS.Core.Events;
 using CQRS.Core.Exceptions;
 using Post.Command.Domain;
 
@@ -39,7 +40,8 @@ public class EventStore : IEventStore
         return eventStream.OrderBy(x => x.Version).Select(x => x.EventData).ToList();
     }
 
-    public async Task SaveEventsAsync(Guid aggregateId, IEnumerable<Event> events, int expectedVersion)
+    public async Task SaveEventsAsync<TAggregate>(Guid aggregateId, IEnumerable<Event> events, int expectedVersion) where TAggregate : AggregateRoot, new()
+    //public async Task SaveEventsAsync(Guid aggregateId, IEnumerable<Event> events, int expectedVersion) 
     {
         List<EventModel> eventStream = await _eventStoreRepository.FindByAggregateId(aggregateId);
 
@@ -59,7 +61,8 @@ public class EventStore : IEventStore
             {
                 TimeStamp = DateTime.Now,
                 AggregateIdentifier = aggregateId,
-                AggregateType = nameof(PostAggregate),
+                AggregateType = nameof(TAggregate),
+                //AggregateType = nameof(PostAggregate),
                 Version = version,
                 EventType = eventType,
                 EventData = @event

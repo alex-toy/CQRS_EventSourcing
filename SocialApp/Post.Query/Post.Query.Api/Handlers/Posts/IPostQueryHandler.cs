@@ -1,5 +1,5 @@
 ﻿using Post.Query.Api.Queries.Posts;
-using Post.Query.Domain.Entities;
+using Post.Query.Domain.Entities.Posts;
 
 namespace Post.Query.Api.Handlers.Posts;
 

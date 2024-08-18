@@ -8,6 +8,6 @@ public class OrderUpdatedEvent : Event
     {
     }
 
-    public string Author { get; set; }
-    public int Quantity { get; set; }
+    public string Address { get; set; }
+    public bool IsEmergency { get; set; }
 }

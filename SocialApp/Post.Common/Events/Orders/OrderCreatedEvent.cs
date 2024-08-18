@@ -9,7 +9,7 @@ public class OrderCreatedEvent : Event
     }
 
     public string Author { get; set; }
-    public Guid ItemId { get; set; }
-    public int Quantity { get; set; }
     public DateTime CreatedAt { get; set; }
+    public string Address { get; set; }
+    public bool IsEmergency { get; set; }
 }

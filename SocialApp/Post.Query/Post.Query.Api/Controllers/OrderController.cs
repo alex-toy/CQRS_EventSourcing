@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Post.Common.DTOs;
 using Post.Query.Api.DTOs;
 using Post.Query.Api.Queries.Orders;
-using Post.Query.Domain.Entities;
+using Post.Query.Domain.Entities.Orders;
 
 namespace Post.Query.Api.Controllers
 {

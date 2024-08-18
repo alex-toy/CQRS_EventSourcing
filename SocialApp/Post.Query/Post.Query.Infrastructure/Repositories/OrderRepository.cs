@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Post.Query.Domain.Entities;
+using Post.Query.Domain.Entities.Orders;
 using Post.Query.Domain.Repositories;
 using Post.Query.Infrastructure.Data;
 

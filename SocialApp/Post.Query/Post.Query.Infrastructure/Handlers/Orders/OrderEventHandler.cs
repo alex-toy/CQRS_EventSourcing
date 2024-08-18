@@ -1,5 +1,5 @@
 ﻿using Post.Common.Events.Orders;
-using Post.Query.Domain.Entities;
+using Post.Query.Domain.Entities.Orders;
 using Post.Query.Domain.Repositories;
 
 namespace Post.Query.Infrastructure.Handlers.Orders;
@@ -19,21 +19,24 @@ public class OrderEventHandler : IOrderEventHandler
         {
             OrderId = @event.Id,
             Author = @event.Author,
+            Address = @event.Address,
+            IsEmergency = @event.IsEmergency,
             CreatedAt = @event.CreatedAt
         };
 
         await _orderRepository.CreateAsync(order);
     }
 
-    //public async Task On(OrderUpdatedEvent @event)
-    //{
-    //    OrderDb post = await _orderRepository.GetByIdAsync(@event.Id);
+    public async Task On(OrderUpdatedEvent @event)
+    {
+        OrderDb order = await _orderRepository.GetByIdAsync(@event.Id);
 
-    //    if (post is null) return;
+        if (order is null) return;
 
-    //    post.Message = @event.Message;
-    //    await _orderRepository.UpdateAsync(post);
-    //}
+        order.Address = @event.Address;
+        order.IsEmergency = @event.IsEmergency;
+        await _orderRepository.UpdateAsync(order);
+    }
 
     public async Task On(OrderDeletedEvent @event)
     {

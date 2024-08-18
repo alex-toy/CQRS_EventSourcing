@@ -1,7 +1,7 @@
 ﻿using Post.Common.Comments;
 using Post.Common.Events.Comments;
 using Post.Common.Events.Posts;
-using Post.Query.Domain.Entities;
+using Post.Query.Domain.Entities.Posts;
 using Post.Query.Domain.Repositories;
 
 namespace Post.Query.Infrastructure.Handlers.Posts;
@@ -34,7 +34,7 @@ public class PostEventHandler : IPostEventHandler
     {
         PostDb post = await _postRepository.GetByIdAsync(@event.Id);
 
-        if (post == null) return;
+        if (post is null) return;
 
         post.Message = @event.Message;
         await _postRepository.UpdateAsync(post);

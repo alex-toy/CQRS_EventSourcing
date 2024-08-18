@@ -6,20 +6,20 @@ namespace Post.Command.Domain;
 public class OrderAggregate : AggregateRoot
 {
     private string _author;
-    private readonly Dictionary<Guid, Tuple<string, string>> _comments = new();
+    private readonly Dictionary<Guid, Tuple<string, string>> _items = new();
 
     public OrderAggregate()
     {
     }
 
-    public OrderAggregate(Guid id, string author, Guid itemId, int quantity)
+    public OrderAggregate(Guid id, string author, string address, bool isEmergency)
     {
         RaiseEvent(new OrderCreatedEvent
         {
             Id = id,
             Author = author,
-            Quantity = quantity,
-            ItemId = itemId
+            Address = address,
+            IsEmergency = isEmergency
         });
     }
 
@@ -32,7 +32,6 @@ public class OrderAggregate : AggregateRoot
     public void Apply(OrderUpdatedEvent @event)
     {
         _id = @event.Id;
-        _author = @event.Author;
     }
 
     //public void Apply(CommentCreatedEvent @event)
@@ -58,17 +57,18 @@ public class OrderAggregate : AggregateRoot
     //    _comments.Remove(@event.CommentId);
     //}
 
-    public void EditQuantity(int quantity)
+    public void UpdateOrder(string address, bool isEmergency)
     {
-        if (quantity < 0)
+        if (string.IsNullOrEmpty(address))
         {
-            throw new InvalidOperationException($"The value of {nameof(quantity)} cannot be negative. Please provide a valid {nameof(quantity)}!");
+            throw new InvalidOperationException($"Please provide a valid {nameof(address)}!");
         }
 
         RaiseEvent(new OrderUpdatedEvent
         {
             Id = _id,
-            Quantity = quantity
+            Address = address,
+            IsEmergency = isEmergency
         });
     }
 
@@ -76,7 +76,7 @@ public class OrderAggregate : AggregateRoot
     {
         if (!_author.Equals(author, StringComparison.CurrentCultureIgnoreCase))
         {
-            throw new InvalidOperationException("You are not allowed to delete a post that was made by someone else!");
+            throw new InvalidOperationException("You are not allowed to delete an order that was made by someone else!");
         }
 
         RaiseEvent(new OrderDeletedEvent

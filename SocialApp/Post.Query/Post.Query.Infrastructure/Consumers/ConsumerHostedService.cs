@@ -2,8 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Post.Query.Infrastructure.Handlers.Orders;
-using Post.Query.Infrastructure.Handlers.Posts;
 
 namespace Post.Query.Infrastructure.Consumers;
 

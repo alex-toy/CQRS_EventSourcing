@@ -51,7 +51,7 @@ public class EventSourcingHandler<T> : IEventSourcingHandler<T> where T : Aggreg
 
     public async Task SaveAsync(AggregateRoot aggregate)
     {
-        await _eventStore.SaveEventsAsync(aggregate.Id, aggregate.GetUncommittedChanges(), aggregate.Version);
+        await _eventStore.SaveEventsAsync<T>(aggregate.Id, aggregate.GetUncommittedChanges(), aggregate.Version);
         aggregate.MarkChangesAsCommitted();
     }
 }

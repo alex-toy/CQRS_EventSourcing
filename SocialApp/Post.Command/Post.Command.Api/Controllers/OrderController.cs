@@ -1,4 +1,5 @@
 ﻿using CQRS.Core.Commands;
+using CQRS.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Post.Command.Api.Commands.Orders;
 using Post.Common.DTOs;
@@ -54,46 +55,46 @@ namespace Post.Cmd.Api.Controllers
             }
         }
 
-        //[HttpDelete("DeletePost/{id}")]
-        //public async Task<ActionResult> DeletePostAsync(Guid id, DeletePostCommand command)
-        //{
-        //    try
-        //    {
-        //        command.Id = id;
-        //        await _commandDispatcher.SendAsync(command);
+        [HttpDelete("DeleteOrder/{id}")]
+        public async Task<ActionResult> DeleteOrderAsync(Guid id, DeleteOrderCommand command)
+        {
+            try
+            {
+                command.Id = id;
+                await _commandDispatcher.SendAsync(command);
 
-        //        return Ok(new BaseResponse
-        //        {
-        //            Message = "Delete post request completed successfully!"
-        //        });
-        //    }
-        //    catch (InvalidOperationException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (AggregateNotFoundException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string SAFE_ERROR_MESSAGE = "Error while processing request to delete a post!";
-        //        _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
+                return Ok(new BaseResponse
+                {
+                    Message = "Delete order request completed successfully!"
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (AggregateNotFoundException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to delete a post!";
+                _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
-        //        {
-        //            Message = SAFE_ERROR_MESSAGE
-        //        });
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
+                {
+                    Message = SAFE_ERROR_MESSAGE
+                });
+            }
+        }
 
         //[HttpPut("LikePost/{id}")]
         //public async Task<ActionResult> LikePostAsync(Guid id)
@@ -135,46 +136,46 @@ namespace Post.Cmd.Api.Controllers
         //    }
         //}
 
-        //[HttpPut("UpdatePost/{id}")]
-        //public async Task<ActionResult> UpdatePostAsync(Guid id, UpdatePostCommand command)
-        //{
-        //    try
-        //    {
-        //        command.Id = id;
-        //        await _commandDispatcher.SendAsync(command);
+        [HttpPut("UpdateOrder/{id}")]
+        public async Task<ActionResult> UpdateOrderAsync(Guid id, UpdateOrderCommand command)
+        {
+            try
+            {
+                command.Id = id;
+                await _commandDispatcher.SendAsync(command);
 
-        //        return Ok(new BaseResponse
-        //        {
-        //            Message = "Edit message request completed successfully!"
-        //        });
-        //    }
-        //    catch (InvalidOperationException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (AggregateNotFoundException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string SAFE_ERROR_MESSAGE = "Error while processing request to edit the message of a post!";
-        //        _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
+                return Ok(new BaseResponse
+                {
+                    Message = "Edit message request completed successfully!"
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (AggregateNotFoundException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to edit a post!";
+                _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
-        //        {
-        //            Message = SAFE_ERROR_MESSAGE
-        //        });
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
+                {
+                    Message = SAFE_ERROR_MESSAGE
+                });
+            }
+        }
 
         //[HttpPut("AddComment/{id}")]
         //public async Task<ActionResult> AddCommentAsync(Guid id, CreateCommentCommand command)

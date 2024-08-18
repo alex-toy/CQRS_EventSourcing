@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Post.Query.Domain.Entities;
+namespace Post.Query.Domain.Entities.Posts;
 
 [Table("Post", Schema = "dbo")]
 public class PostDb : Entity
