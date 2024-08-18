@@ -1,6 +1,7 @@
 ﻿using CQRS.Core.Queries;
 using Microsoft.AspNetCore.Mvc;
 using Post.Common.DTOs;
+using Post.Query.Api.Dtos;
 using Post.Query.Api.DTOs;
 using Post.Query.Api.Queries.Orders;
 using Post.Query.Domain.Entities.Orders;
@@ -25,8 +26,8 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                var posts = await _queryDispatcher.HandleAsync(new GetAllOrdersQuery());
-                return NormalResponse(posts);
+                List<OrderDb> orders = await _queryDispatcher.HandleAsync(new GetAllOrdersQuery());
+                return NormalResponse(orders);
             }
             catch (Exception ex)
             {
@@ -40,13 +41,13 @@ namespace Post.Query.Api.Controllers
         {
             try
             {
-                List<OrderDb>? posts = await _queryDispatcher.HandleAsync(new GetOrderByIdQuery { Id = orderId });
+                List<OrderDb>? orders = await _queryDispatcher.HandleAsync(new GetOrderByIdQuery { Id = orderId });
 
-                if (posts is null || !posts.Any()) return NoContent();
+                if (orders is null || !orders.Any()) return NoContent();
 
-                return Ok(new OrderDto
+                return Ok(new OrdersDto
                 {
-                    Orders = posts,
+                    Orders = orders.Select(o => OrderDto.GetDto(o)).ToList(),
                     Message = "Successfully returned order!"
                 });
             }
@@ -57,59 +58,29 @@ namespace Post.Query.Api.Controllers
             }
         }
 
-        //[HttpGet("GetPostsByAuthor/{author}")]
-        //public async Task<ActionResult> GetPostsByAuthorAsync(string author)
-        //{
-        //    try
-        //    {
-        //        List<PostDb> posts = await _queryDispatcher.SendAsync(new GetPostsByAuthorQuery { Author = author });
-        //        return NormalResponse(posts);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string SAFE_ERROR_MESSAGE = "Error while processing request to find posts by author!";
-        //        return ErrorResponse(ex, SAFE_ERROR_MESSAGE);
-        //    }
-        //}
-
-        //[HttpGet("GetPostsWithComments")]
-        //public async Task<ActionResult> GetPostsWithCommentsAsync()
-        //{
-        //    try
-        //    {
-        //        List<PostDb> posts = await _queryDispatcher.SendAsync(new GetPostsWithCommentsQuery());
-        //        return NormalResponse(posts);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string SAFE_ERROR_MESSAGE = "Error while processing request to find posts with comments!";
-        //        return ErrorResponse(ex, SAFE_ERROR_MESSAGE);
-        //    }
-        //}
-
-        //[HttpGet("GetPostsWithLikes/{numberOfLikes}")]
-        //public async Task<ActionResult> GetPostsWithLikesAsync(int numberOfLikes)
-        //{
-        //    try
-        //    {
-        //        List<PostDb> posts = await _queryDispatcher.SendAsync(new GetPostsWithLikesQuery { NumberOfLikes = numberOfLikes });
-        //        return NormalResponse(posts);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string SAFE_ERROR_MESSAGE = "Error while processing request to find posts with likes!";
-        //        return ErrorResponse(ex, SAFE_ERROR_MESSAGE);
-        //    }
-        //}
-
-        private ActionResult NormalResponse(List<OrderDb> posts)
+        [HttpGet("GetOrdersWithItems")]
+        public async Task<ActionResult> GetOrdersWithItemsAsync()
         {
-            if (posts is null || !posts.Any()) return NoContent();
-
-            int count = posts.Count;
-            return Ok(new OrderDto
+            try
             {
-                Orders = posts,
+                List<OrderDb> orders = await _queryDispatcher.HandleAsync(new GetOrdersWithItemsQuery());
+                return NormalResponse(orders);
+            }
+            catch (Exception ex)
+            {
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to find orders with items!";
+                return ErrorResponse(ex, SAFE_ERROR_MESSAGE);
+            }
+        }
+
+        private ActionResult NormalResponse(List<OrderDb> orders)
+        {
+            if (orders is null || !orders.Any()) return NoContent();
+
+            int count = orders.Count;
+            return Ok(new OrdersDto
+            {
+                Orders = orders.Select(o => OrderDto.GetDto(o)).ToList(),
                 Message = $"Successfully returned {count} post{(count > 1 ? "s" : string.Empty)}!"
             });
         }

@@ -15,12 +15,17 @@ public class OrderQueryHandler : IOrderQueryHandler
 
     public async Task<List<OrderDb>> HandleAsync(GetAllOrdersQuery query)
     {
-        return await _orderRepository.ListAllAsync();
+        return await _orderRepository.GetAllAsync();
     }
 
     public async Task<List<OrderDb>> HandleAsync(GetOrderByIdQuery query)
     {
         OrderDb order = await _orderRepository.GetByIdAsync(query.Id);
         return new List<OrderDb> { order };
+    }
+
+    public async Task<List<OrderDb>> HandleAsync(GetOrdersWithItemsQuery query)
+    {
+        return await _orderRepository.GetAllWithItemsAsync();
     }
 }

@@ -11,5 +11,6 @@ public class ItemUpdatedEvent : Event
     public Guid ItemId { get; set; }
     public string Label { get; set; }
     public double Price { get; set; }
+    public int Quantity { get; set; }
     public DateTime EditDate { get; set; }
 }

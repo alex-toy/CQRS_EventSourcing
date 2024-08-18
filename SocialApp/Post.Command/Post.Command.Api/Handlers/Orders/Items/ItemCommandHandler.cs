@@ -16,7 +16,7 @@ public class ItemCommandHandler : IItemCommandHandler
     public async Task HandleAsync(CreateItemCommand command)
     {
         OrderAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
-        aggregate.AddItem(command.Label, command.Price);
+        aggregate.AddItem(command.Label, command.Price, command.Quantity);
 
         await _eventSourcingHandler.SaveAsync(aggregate);
     }
@@ -24,7 +24,7 @@ public class ItemCommandHandler : IItemCommandHandler
     public async Task HandleAsync(UpdateItemCommand command)
     {
         OrderAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
-        aggregate.EditItem(command.ItemId, command.Label, command.Price);
+        aggregate.EditItem(command.ItemId, command.Label, command.Price, command.Quantity);
 
         await _eventSourcingHandler.SaveAsync(aggregate);
     }

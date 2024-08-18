@@ -148,7 +148,7 @@ namespace Post.Cmd.Api.Controllers
 
                 return Ok(new BaseResponse
                 {
-                    Message = "Add comment request completed successfully!"
+                    Message = "Add item request completed successfully!"
                 });
             }
             catch (InvalidOperationException ex)
@@ -169,7 +169,7 @@ namespace Post.Cmd.Api.Controllers
             }
             catch (Exception ex)
             {
-                const string SAFE_ERROR_MESSAGE = "Error while processing request to item a comment to an order!";
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to add an item to an order!";
                 _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
@@ -179,86 +179,86 @@ namespace Post.Cmd.Api.Controllers
             }
         }
 
-        //[HttpPut("EditComment/{id}")]
-        //public async Task<ActionResult> EditCommentAsync(Guid id, UpdateCommentCommand command)
-        //{
-        //    try
-        //    {
-        //        command.Id = id;
-        //        await _commandDispatcher.SendAsync(command);
+        [HttpPut("UpdateItem/{id}")]
+        public async Task<ActionResult> UpdateItemAsync(Guid id, UpdateItemCommand command)
+        {
+            try
+            {
+                command.Id = id;
+                await _commandDispatcher.SendAsync(command);
 
-        //        return Ok(new BaseResponse
-        //        {
-        //            Message = "Edit comment request completed successfully!"
-        //        });
-        //    }
-        //    catch (InvalidOperationException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (AggregateNotFoundException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string SAFE_ERROR_MESSAGE = "Error while processing request to edit a comment on a post!";
-        //        _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
+                return Ok(new BaseResponse
+                {
+                    Message = "Edit item request completed successfully!"
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (AggregateNotFoundException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to edit an item on an order!";
+                _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
-        //        {
-        //            Message = SAFE_ERROR_MESSAGE
-        //        });
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
+                {
+                    Message = SAFE_ERROR_MESSAGE
+                });
+            }
+        }
 
-        //[HttpDelete("RemoveComment/{id}")]
-        //public async Task<ActionResult> RemoveCommentAsync(Guid id, DeleteCommentCommand command)
-        //{
-        //    try
-        //    {
-        //        command.Id = id;
-        //        await _commandDispatcher.SendAsync(command);
+        [HttpDelete("DeleteItem/{id}")]
+        public async Task<ActionResult> DeleteItemAsync(Guid id, DeleteItemCommand command)
+        {
+            try
+            {
+                command.Id = id;
+                await _commandDispatcher.SendAsync(command);
 
-        //        return Ok(new BaseResponse
-        //        {
-        //            Message = "Remove comment request completed successfully!"
-        //        });
-        //    }
-        //    catch (InvalidOperationException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (AggregateNotFoundException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string SAFE_ERROR_MESSAGE = "Error while processing request to remove a comment from a post!";
-        //        _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
+                return Ok(new BaseResponse
+                {
+                    Message = "Remove item request completed successfully!"
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (AggregateNotFoundException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to remove an item from an order!";
+                _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
-        //        {
-        //            Message = SAFE_ERROR_MESSAGE
-        //        });
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
+                {
+                    Message = SAFE_ERROR_MESSAGE
+                });
+            }
+        }
     }
 }

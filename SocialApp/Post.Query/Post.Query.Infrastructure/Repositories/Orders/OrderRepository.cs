@@ -33,15 +33,6 @@ namespace Post.Query.Infrastructure.Repositories.Orders
             _ = await context.SaveChangesAsync();
         }
 
-        public async Task<List<OrderDb>> ListByAuthorAsync(string author)
-        {
-            using DatabaseContext context = _contextFactory.CreateDbContext();
-            return await context.Orders.AsNoTracking()
-                    .Include(i => i.Items).AsNoTracking()
-                    .Where(x => x.Author.Contains(author))
-                    .ToListAsync();
-        }
-
         public async Task<OrderDb> GetByIdAsync(Guid postId)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
@@ -50,7 +41,7 @@ namespace Post.Query.Infrastructure.Repositories.Orders
                     .FirstOrDefaultAsync(x => x.OrderId == postId);
         }
 
-        public async Task<List<OrderDb>> ListAllAsync()
+        public async Task<List<OrderDb>> GetAllAsync()
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Orders.AsNoTracking()
@@ -58,7 +49,7 @@ namespace Post.Query.Infrastructure.Repositories.Orders
                     .ToListAsync();
         }
 
-        public async Task<List<OrderDb>> ListWithCommentsAsync()
+        public async Task<List<OrderDb>> GetAllWithItemsAsync()
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Orders.AsNoTracking()
@@ -66,15 +57,6 @@ namespace Post.Query.Infrastructure.Repositories.Orders
                     .Where(x => x.Items != null && x.Items.Any())
                     .ToListAsync();
         }
-
-        //public async Task<List<OrderDb>> ListWithLikesAsync(int numberOfLikes)
-        //{
-        //    using DatabaseContext context = _contextFactory.CreateDbContext();
-        //    return await context.Orders.AsNoTracking()
-        //            .Include(i => i.Items).AsNoTracking()
-        //            .Where(x => x.Likes >= numberOfLikes)
-        //            .ToListAsync();
-        //}
 
         public async Task UpdateAsync(OrderDb post)
         {

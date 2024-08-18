@@ -26,7 +26,6 @@ docker network create --attachable -d bridge mydockernetwork
 
 2. Kafka :
 ```
-docker-compose up -d
 docker exec dotnetmicroservicescqrseventsourcingwithkafka_kafka_1 kafka-topics.sh  --bootstrap-server localhost:9092  --create --replication-factor 1 --partitions 1 --topic SocialMediaPostEvents
 ```
 
@@ -38,6 +37,11 @@ docker run -it -d --name mongo-container -p 27017:27017 --network mydockernetwor
 4. Microsoft SQL Server
 ```
 docker run -d --name sql-container --network mydockernetwork --restart always -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=$tr0ngS@P@ssw0rd02' -e 'MSSQL_PID=Express' -p 1433:1433 mcr.microsoft.com/mssql/server:2017-latest-ubuntu 
+```
+
+5. APIs
+```
+docker-compose up -d
 ```
 
 <img src="/pictures/docker.png" title="docker images"  width="900"> 

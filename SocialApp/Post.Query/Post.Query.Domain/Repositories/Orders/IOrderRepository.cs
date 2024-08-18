@@ -8,5 +8,6 @@ public interface IOrderRepository
     Task UpdateAsync(OrderDb post);
     Task DeleteAsync(Guid postId);
     Task<OrderDb> GetByIdAsync(Guid postId);
-    Task<List<OrderDb>> ListAllAsync();
+    Task<List<OrderDb>> GetAllAsync();
+    Task<List<OrderDb>> GetAllWithItemsAsync();
 }

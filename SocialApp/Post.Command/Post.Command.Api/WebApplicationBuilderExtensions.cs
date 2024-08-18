@@ -15,6 +15,7 @@ using Post.Command.Infrastructure.Configs;
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
 using Post.Common.Events.Orders;
+using Post.Common.Events.Orders.Items;
 using Post.Common.Events.Posts;
 
 namespace Post.Command.Api;
@@ -37,6 +38,10 @@ public static class WebApplicationBuilderExtensions
         BsonClassMap.RegisterClassMap<OrderCreatedEvent>();
         BsonClassMap.RegisterClassMap<OrderUpdatedEvent>();
         BsonClassMap.RegisterClassMap<OrderDeletedEvent>();
+
+        BsonClassMap.RegisterClassMap<ItemCreatedEvent>();
+        BsonClassMap.RegisterClassMap<ItemUpdatedEvent>();
+        BsonClassMap.RegisterClassMap<ItemDeletedEvent>();
     }
 
     public static void ConfigureMongo(this WebApplicationBuilder builder)

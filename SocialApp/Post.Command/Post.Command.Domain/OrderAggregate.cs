@@ -1,4 +1,5 @@
-﻿using CQRS.Core.Domain;
+﻿using Amazon.Runtime.Internal.Transform;
+using CQRS.Core.Domain;
 using Post.Common.Events.Orders;
 using Post.Common.Events.Orders.Items;
 
@@ -7,7 +8,7 @@ namespace Post.Command.Domain;
 public class OrderAggregate : AggregateRoot
 {
     private string _author;
-    private readonly Dictionary<Guid, Tuple<string, double>> _items = new();
+    private readonly Dictionary<Guid, Tuple<string, double, int>> _items = new();
 
     public OrderAggregate()
     {
@@ -43,13 +44,13 @@ public class OrderAggregate : AggregateRoot
     public void Apply(ItemCreatedEvent @event)
     {
         _id = @event.Id;
-        _items.Add(@event.ItemId, new Tuple<string, double>(@event.Label, @event.Price));
+        _items.Add(@event.ItemId, new Tuple<string, double, int>(@event.Label, @event.Price, @event.Quantity));
     }
 
     public void Apply(ItemUpdatedEvent @event)
     {
         _id = @event.Id;
-        _items[@event.ItemId] = new Tuple<string, double>(@event.Label, @event.Price);
+        _items[@event.ItemId] = new Tuple<string, double, int>(@event.Label, @event.Price, @event.Quantity);
     }
 
     public void Apply(ItemDeletedEvent @event)
@@ -86,7 +87,7 @@ public class OrderAggregate : AggregateRoot
         });
     }
 
-    public void AddItem(string label, double price)
+    public void AddItem(string label, double price, int quantity)
     {
         if (string.IsNullOrWhiteSpace(label))
         {
@@ -98,11 +99,12 @@ public class OrderAggregate : AggregateRoot
             Id = _id,
             ItemId = Guid.NewGuid(),
             Label = label,
+            Quantity = quantity,
             Price = price
         });
     }
 
-    public void EditItem(Guid itemId, string label, double price)
+    public void EditItem(Guid itemId, string label, double price, int quantity)
     {
         //if (!_items[itemId].Item2.Equals(price, StringComparison.CurrentCultureIgnoreCase))
         //{
@@ -114,6 +116,8 @@ public class OrderAggregate : AggregateRoot
             Id = _id,
             ItemId = itemId,
             Price = price,
+            Label = label,
+            Quantity = quantity,
             EditDate = DateTime.Now
         });
     }

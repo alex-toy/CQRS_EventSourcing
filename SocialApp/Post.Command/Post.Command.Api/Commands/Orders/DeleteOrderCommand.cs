@@ -5,5 +5,4 @@ namespace Post.Command.Api.Commands.Orders;
 public class DeleteOrderCommand : BaseCommand
 {
     public string Author { get; set; }
-    public Guid ItemId { get; set; }
 }

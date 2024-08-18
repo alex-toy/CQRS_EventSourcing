@@ -1,7 +1,6 @@
 ﻿using CQRS.Core.Domain;
 using CQRS.Core.Events;
 using CQRS.Core.Exceptions;
-using Post.Command.Domain;
 
 namespace Post.Command.Infrastructure;
 
@@ -30,7 +29,7 @@ public class EventStore : IEventStore
 
     public async Task<List<Event>> GetEventsAsync(Guid aggregateId)
     {
-        List<EventModel> eventStream = await _eventStoreRepository.FindByAggregateId(aggregateId);
+        List<EventModel> eventStream = await _eventStoreRepository.FindByAggregateId(aggregateId); //label = null !!!
 
         if (eventStream is null || !eventStream.Any())
         {
@@ -41,7 +40,6 @@ public class EventStore : IEventStore
     }
 
     public async Task SaveEventsAsync<TAggregate>(Guid aggregateId, IEnumerable<Event> events, int expectedVersion) where TAggregate : AggregateRoot, new()
-    //public async Task SaveEventsAsync(Guid aggregateId, IEnumerable<Event> events, int expectedVersion) 
     {
         List<EventModel> eventStream = await _eventStoreRepository.FindByAggregateId(aggregateId);
 
@@ -62,7 +60,6 @@ public class EventStore : IEventStore
                 TimeStamp = DateTime.Now,
                 AggregateIdentifier = aggregateId,
                 AggregateType = nameof(TAggregate),
-                //AggregateType = nameof(PostAggregate),
                 Version = version,
                 EventType = eventType,
                 EventData = @event

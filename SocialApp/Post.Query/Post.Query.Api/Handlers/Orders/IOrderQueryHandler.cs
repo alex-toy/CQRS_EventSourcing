@@ -7,4 +7,5 @@ public interface IOrderQueryHandler
 {
     Task<List<OrderDb>> HandleAsync(GetAllOrdersQuery query);
     Task<List<OrderDb>> HandleAsync(GetOrderByIdQuery query);
+    Task<List<OrderDb>> HandleAsync(GetOrdersWithItemsQuery query);
 }

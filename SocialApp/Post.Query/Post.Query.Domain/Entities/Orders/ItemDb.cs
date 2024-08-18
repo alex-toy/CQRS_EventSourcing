@@ -10,6 +10,7 @@ public class ItemDb : Entity
     public Guid ItemId { get; set; }
     public string Label { get; set; }
     public double Price { get; set; }
+    public int Quantity { get; set; }
     public Guid OrderId { get; set; }
 
     [System.Text.Json.Serialization.JsonIgnore]

@@ -53,7 +53,8 @@ public class OrderEventHandler : IOrderEventHandler
             OrderId = @event.Id,
             ItemId = @event.ItemId,
             Label = @event.Label,
-            Price = @event.Price
+            Price = @event.Price,
+            Quantity = @event.Quantity
         };
 
         await _itemRepository.CreateAsync(comment);
@@ -67,6 +68,7 @@ public class OrderEventHandler : IOrderEventHandler
 
         item.Label = @event.Label;
         item.Price = @event.Price;
+        item.Quantity = @event.Quantity;
 
         await _itemRepository.UpdateAsync(item);
     }
