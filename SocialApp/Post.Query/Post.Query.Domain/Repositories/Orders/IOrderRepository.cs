@@ -1,6 +1,6 @@
 ﻿using Post.Query.Domain.Entities.Orders;
 
-namespace Post.Query.Domain.Repositories;
+namespace Post.Query.Domain.Repositories.Orders;
 
 public interface IOrderRepository
 {

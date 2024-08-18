@@ -1,6 +1,6 @@
 ﻿using CQRS.Core.Commands;
 
-namespace Post.Command.Api.Commands.Comments;
+namespace Post.Command.Api.Commands.Posts.Comments;
 
 public class DeleteCommentCommand : BaseCommand
 {

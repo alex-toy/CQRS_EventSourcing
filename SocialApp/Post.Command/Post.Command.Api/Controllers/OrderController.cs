@@ -2,6 +2,7 @@
 using CQRS.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Post.Command.Api.Commands.Orders;
+using Post.Command.Api.Commands.Orders.Items;
 using Post.Common.DTOs;
 
 namespace Post.Cmd.Api.Controllers
@@ -96,46 +97,6 @@ namespace Post.Cmd.Api.Controllers
             }
         }
 
-        //[HttpPut("LikePost/{id}")]
-        //public async Task<ActionResult> LikePostAsync(Guid id)
-        //{
-        //    try
-        //    {
-        //        await _commandDispatcher.SendAsync(new LikePostCommand { Id = id });
-
-        //        return Ok(new BaseResponse
-        //        {
-        //            Message = "Like post request completed successfully!"
-        //        });
-        //    }
-        //    catch (InvalidOperationException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (AggregateNotFoundException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string SAFE_ERROR_MESSAGE = "Error while processing request to like a post!";
-        //        _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
-
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
-        //        {
-        //            Message = SAFE_ERROR_MESSAGE
-        //        });
-        //    }
-        //}
-
         [HttpPut("UpdateOrder/{id}")]
         public async Task<ActionResult> UpdateOrderAsync(Guid id, UpdateOrderCommand command)
         {
@@ -177,46 +138,46 @@ namespace Post.Cmd.Api.Controllers
             }
         }
 
-        //[HttpPut("AddComment/{id}")]
-        //public async Task<ActionResult> AddCommentAsync(Guid id, CreateCommentCommand command)
-        //{
-        //    try
-        //    {
-        //        command.Id = id;
-        //        await _commandDispatcher.SendAsync(command);
+        [HttpPut("AddItem/{id}")]
+        public async Task<ActionResult> AddItemAsync(Guid id, CreateItemCommand command)
+        {
+            try
+            {
+                command.Id = id;
+                await _commandDispatcher.SendAsync(command);
 
-        //        return Ok(new BaseResponse
-        //        {
-        //            Message = "Add comment request completed successfully!"
-        //        });
-        //    }
-        //    catch (InvalidOperationException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (AggregateNotFoundException ex)
-        //    {
-        //        _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
-        //        return BadRequest(new BaseResponse
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string SAFE_ERROR_MESSAGE = "Error while processing request to add a comment to a post!";
-        //        _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
+                return Ok(new BaseResponse
+                {
+                    Message = "Add comment request completed successfully!"
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (AggregateNotFoundException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to item a comment to an order!";
+                _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
 
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
-        //        {
-        //            Message = SAFE_ERROR_MESSAGE
-        //        });
-        //    }
-        //}
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
+                {
+                    Message = SAFE_ERROR_MESSAGE
+                });
+            }
+        }
 
         //[HttpPut("EditComment/{id}")]
         //public async Task<ActionResult> EditCommentAsync(Guid id, UpdateCommentCommand command)

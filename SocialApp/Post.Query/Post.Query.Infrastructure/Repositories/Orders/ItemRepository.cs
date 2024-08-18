@@ -1,30 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Post.Query.Domain.Entities.Posts;
-using Post.Query.Domain.Repositories;
+using Post.Query.Domain.Entities.Orders;
+using Post.Query.Domain.Repositories.Orders;
 using Post.Query.Infrastructure.Data;
 
-namespace Post.Query.Infrastructure.Repositories
+namespace Post.Query.Infrastructure.Repositories.Orders
 {
-    public class CommentRepository : ICommentRepository
+    public class ItemRepository : IItemRepository
     {
         private readonly DatabaseContextFactory _contextFactory;
 
-        public CommentRepository(DatabaseContextFactory contextFactory)
+        public ItemRepository(DatabaseContextFactory contextFactory)
         {
             _contextFactory = contextFactory;
         }
 
-        public async Task<CommentDb> GetByIdAsync(Guid commentId)
+        public async Task<ItemDb> GetByIdAsync(Guid itemId)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
 
-            return await context.Comments.FirstOrDefaultAsync(x => x.CommentId == commentId);
+            return await context.Items.FirstOrDefaultAsync(x => x.ItemId == itemId);
         }
 
-        public async Task UpdateAsync(CommentDb comment)
+        public async Task UpdateAsync(ItemDb item)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
-            context.Comments.Update(comment);
+            context.Items.Update(item);
 
             _ = await context.SaveChangesAsync();
         }
@@ -32,18 +32,18 @@ namespace Post.Query.Infrastructure.Repositories
         public async Task DeleteAsync(Guid commentId)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
-            var comment = await GetByIdAsync(commentId);
+            ItemDb? item = await GetByIdAsync(commentId);
 
-            if (comment == null) return;
+            if (item is null) return;
 
-            context.Comments.Remove(comment);
+            context.Items.Remove(item);
             _ = await context.SaveChangesAsync();
         }
 
-        public async Task CreateAsync(CommentDb comment)
+        public async Task CreateAsync(ItemDb comment)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
-            context.Comments.Add(comment);
+            context.Items.Add(comment);
 
             _ = await context.SaveChangesAsync();
         }

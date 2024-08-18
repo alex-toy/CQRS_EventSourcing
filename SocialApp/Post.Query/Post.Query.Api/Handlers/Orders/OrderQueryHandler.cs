@@ -1,6 +1,6 @@
 ﻿using Post.Query.Api.Queries.Orders;
 using Post.Query.Domain.Entities.Orders;
-using Post.Query.Domain.Repositories;
+using Post.Query.Domain.Repositories.Orders;
 
 namespace Post.Query.Api.Handlers.Orders;
 

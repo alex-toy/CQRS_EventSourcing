@@ -2,7 +2,7 @@
 using Post.Common.Events.Comments;
 using Post.Common.Events.Posts;
 using Post.Query.Domain.Entities.Posts;
-using Post.Query.Domain.Repositories;
+using Post.Query.Domain.Repositories.Posts;
 
 namespace Post.Query.Infrastructure.Handlers.Posts;
 

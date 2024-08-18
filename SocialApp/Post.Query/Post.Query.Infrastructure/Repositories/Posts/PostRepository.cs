@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Post.Query.Domain.Entities.Posts;
-using Post.Query.Domain.Repositories;
+using Post.Query.Domain.Repositories.Posts;
 using Post.Query.Infrastructure.Data;
 
-namespace Post.Query.Infrastructure.Repositories
+namespace Post.Query.Infrastructure.Repositories.Posts
 {
     public class PostRepository : IPostRepository
     {

@@ -1,8 +1,6 @@
-﻿using Post.Command.Api.Commands;
-using Post.Command.Api.Commands.Comments;
-using Post.Command.Api.Commands.Posts;
+﻿using Post.Command.Api.Commands.Posts.Comments;
 
-namespace Post.Command.Api.Handlers.Comments;
+namespace Post.Command.Api.Handlers.Posts.Comments;
 
 public interface ICommentCommandHandler
 {

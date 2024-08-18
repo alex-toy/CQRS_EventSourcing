@@ -1,20 +1,21 @@
 ﻿using Confluent.Kafka;
 using CQRS.Core.Events;
 using MongoDB.Bson.Serialization;
-using Post.Command.Infrastructure.Configs;
+using Post.Command.Api.Commands.Orders;
+using Post.Command.Api.Commands.Orders.Items;
+using Post.Command.Api.Commands.Posts;
+using Post.Command.Api.Commands.Posts.Comments;
+using Post.Command.Api.Handlers.Orders;
+using Post.Command.Api.Handlers.Orders.Items;
+using Post.Command.Api.Handlers.Posts;
+using Post.Command.Api.Handlers.Posts.Comments;
+using Post.Command.Domain;
 using Post.Command.Infrastructure;
+using Post.Command.Infrastructure.Configs;
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
 using Post.Common.Events.Orders;
 using Post.Common.Events.Posts;
-using Post.Command.Api.Commands.Comments;
-using Post.Command.Api.Commands.Posts;
-using Post.Command.Api.Handlers.Comments;
-using Post.Command.Api.Handlers.Posts;
-using Post.Command.Domain;
-using CQRS.Core.Commands;
-using Post.Command.Api.Handlers.Orders;
-using Post.Command.Api.Commands.Orders;
 
 namespace Post.Command.Api;
 
@@ -73,10 +74,16 @@ public static class WebApplicationBuilderExtensions
     {
         builder.Services.AddScoped<IEventSourcingHandler<OrderAggregate>, EventSourcingHandler<OrderAggregate>>();
         builder.Services.AddScoped<IOrderCommandHandler, OrderCommandHandler>();
+        builder.Services.AddScoped<IItemCommandHandler, ItemCommandHandler>();
 
         IOrderCommandHandler orderCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IOrderCommandHandler>();
         dispatcher.RegisterHandler<CreateOrderCommand>(orderCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<UpdateOrderCommand>(orderCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<DeleteOrderCommand>(orderCommandHandler.HandleAsync);
+
+        IItemCommandHandler itemCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IItemCommandHandler>();
+        dispatcher.RegisterHandler<CreateItemCommand>(itemCommandHandler.HandleAsync);
+        dispatcher.RegisterHandler<UpdateItemCommand>(itemCommandHandler.HandleAsync);
+        dispatcher.RegisterHandler<DeleteItemCommand>(itemCommandHandler.HandleAsync);
     }
 }

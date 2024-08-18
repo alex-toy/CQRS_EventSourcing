@@ -1,8 +1,8 @@
 ﻿using CQRS.Core.Events;
-using Post.Command.Api.Commands.Comments;
+using Post.Command.Api.Commands.Posts.Comments;
 using Post.Command.Domain;
 
-namespace Post.Command.Api.Handlers.Comments;
+namespace Post.Command.Api.Handlers.Posts.Comments;
 
 public class CommentCommandHandler : ICommentCommandHandler
 {

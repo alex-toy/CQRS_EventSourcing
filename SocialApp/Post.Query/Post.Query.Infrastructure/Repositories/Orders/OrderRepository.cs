@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Post.Query.Domain.Entities.Orders;
-using Post.Query.Domain.Repositories;
+using Post.Query.Domain.Repositories.Orders;
 using Post.Query.Infrastructure.Data;
 
-namespace Post.Query.Infrastructure.Repositories
+namespace Post.Query.Infrastructure.Repositories.Orders
 {
     public class OrderRepository : IOrderRepository
     {

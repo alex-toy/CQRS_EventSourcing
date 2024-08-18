@@ -6,12 +6,14 @@ using Post.Query.Api.Queries.Orders;
 using Post.Query.Api.Queries.Posts;
 using Post.Query.Domain.Entities.Orders;
 using Post.Query.Domain.Entities.Posts;
-using Post.Query.Domain.Repositories;
+using Post.Query.Domain.Repositories.Orders;
+using Post.Query.Domain.Repositories.Posts;
 using Post.Query.Infrastructure.Data;
 using Post.Query.Infrastructure.Dispatchers;
 using Post.Query.Infrastructure.Handlers.Orders;
 using Post.Query.Infrastructure.Handlers.Posts;
-using Post.Query.Infrastructure.Repositories;
+using Post.Query.Infrastructure.Repositories.Orders;
+using Post.Query.Infrastructure.Repositories.Posts;
 
 namespace Post.Query.Api;
 
@@ -54,6 +56,7 @@ public static class WebApplicationBuilderExtensions
     public static void ConfigureOrders(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<IItemRepository, ItemRepository>();
 
         builder.Services.AddScoped<IOrderQueryHandler, OrderQueryHandler>();
 

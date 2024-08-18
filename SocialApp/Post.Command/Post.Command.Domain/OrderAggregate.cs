@@ -1,12 +1,13 @@
 ﻿using CQRS.Core.Domain;
 using Post.Common.Events.Orders;
+using Post.Common.Events.Orders.Items;
 
 namespace Post.Command.Domain;
 
 public class OrderAggregate : AggregateRoot
 {
     private string _author;
-    private readonly Dictionary<Guid, Tuple<string, string>> _items = new();
+    private readonly Dictionary<Guid, Tuple<string, double>> _items = new();
 
     public OrderAggregate()
     {
@@ -34,28 +35,28 @@ public class OrderAggregate : AggregateRoot
         _id = @event.Id;
     }
 
-    //public void Apply(CommentCreatedEvent @event)
-    //{
-    //    _id = @event.Id;
-    //    _comments.Add(@event.CommentId, new Tuple<string, string>(@event.Comment, @event.Username));
-    //}
-
-    //public void Apply(CommentUpdatedEvent @event)
-    //{
-    //    _id = @event.Id;
-    //    _comments[@event.CommentId] = new Tuple<string, string>(@event.Comment, @event.Username);
-    //}
-
     public void Apply(OrderDeletedEvent @event)
     {
         _id = @event.Id;
     }
 
-    //public void Apply(CommentDeletedEvent @event)
-    //{
-    //    _id = @event.Id;
-    //    _comments.Remove(@event.CommentId);
-    //}
+    public void Apply(ItemCreatedEvent @event)
+    {
+        _id = @event.Id;
+        _items.Add(@event.ItemId, new Tuple<string, double>(@event.Label, @event.Price));
+    }
+
+    public void Apply(ItemUpdatedEvent @event)
+    {
+        _id = @event.Id;
+        _items[@event.ItemId] = new Tuple<string, double>(@event.Label, @event.Price);
+    }
+
+    public void Apply(ItemDeletedEvent @event)
+    {
+        _id = @event.Id;
+        _items.Remove(@event.ItemId);
+    }
 
     public void UpdateOrder(string address, bool isEmergency)
     {
@@ -85,51 +86,49 @@ public class OrderAggregate : AggregateRoot
         });
     }
 
-    //public void AddComment(string comment, string username)
-    //{
-    //    if (string.IsNullOrWhiteSpace(comment))
-    //    {
-    //        throw new InvalidOperationException($"The value of {nameof(comment)} cannot be null or empty. Please provide a valid {nameof(comment)}!");
-    //    }
+    public void AddItem(string label, double price)
+    {
+        if (string.IsNullOrWhiteSpace(label))
+        {
+            throw new InvalidOperationException($"The value of {nameof(label)} cannot be null or empty. Please provide a valid {nameof(label)}!");
+        }
 
-    //    RaiseEvent(new CommentCreatedEvent
-    //    {
-    //        Id = _id,
-    //        CommentId = Guid.NewGuid(),
-    //        Comment = comment,
-    //        Username = username,
-    //        CommentDate = DateTime.Now
-    //    });
-    //}
+        RaiseEvent(new ItemCreatedEvent
+        {
+            Id = _id,
+            ItemId = Guid.NewGuid(),
+            Label = label,
+            Price = price
+        });
+    }
 
-    //public void EditComment(Guid commentId, string comment, string username)
-    //{
-    //    if (!_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
-    //    {
-    //        throw new InvalidOperationException("You are not allowed to edit a comment that was made by another user!");
-    //    }
+    public void EditItem(Guid itemId, string label, double price)
+    {
+        //if (!_items[itemId].Item2.Equals(price, StringComparison.CurrentCultureIgnoreCase))
+        //{
+        //    throw new InvalidOperationException("You are not allowed to edit a comment that was made by another user!");
+        //}
 
-    //    RaiseEvent(new CommentUpdatedEvent
-    //    {
-    //        Id = _id,
-    //        CommentId = commentId,
-    //        Comment = comment,
-    //        Username = username,
-    //        EditDate = DateTime.Now
-    //    });
-    //}
+        RaiseEvent(new ItemUpdatedEvent
+        {
+            Id = _id,
+            ItemId = itemId,
+            Price = price,
+            EditDate = DateTime.Now
+        });
+    }
 
-    //public void RemoveComment(Guid commentId, string username)
-    //{
-    //    if (!_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
-    //    {
-    //        throw new InvalidOperationException("You are not allowed to remove a comment that was made by another user!");
-    //    }
+    public void RemoveItem(Guid itemId)
+    {
+        //if (!_items[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+        //{
+        //    throw new InvalidOperationException("You are not allowed to remove a comment that was made by another user!");
+        //}
 
-    //    RaiseEvent(new CommentDeletedEvent
-    //    {
-    //        Id = _id,
-    //        CommentId = commentId
-    //    });
-    //}
+        RaiseEvent(new ItemDeletedEvent
+        {
+            Id = _id,
+            ItemId = itemId
+        });
+    }
 }

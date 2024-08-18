@@ -1,16 +1,19 @@
 ﻿using Post.Common.Events.Orders;
+using Post.Common.Events.Orders.Items;
 using Post.Query.Domain.Entities.Orders;
-using Post.Query.Domain.Repositories;
+using Post.Query.Domain.Repositories.Orders;
 
 namespace Post.Query.Infrastructure.Handlers.Orders;
 
 public class OrderEventHandler : IOrderEventHandler
 {
     private readonly IOrderRepository _orderRepository;
+    private readonly IItemRepository _itemRepository;
 
-    public OrderEventHandler(IOrderRepository orderRepository)
+    public OrderEventHandler(IOrderRepository orderRepository, IItemRepository itemRepository)
     {
         _orderRepository = orderRepository;
+        _itemRepository = itemRepository;
     }
 
     public async Task On(OrderCreatedEvent @event)
@@ -41,5 +44,35 @@ public class OrderEventHandler : IOrderEventHandler
     public async Task On(OrderDeletedEvent @event)
     {
         await _orderRepository.DeleteAsync(@event.Id);
+    }
+
+    public async Task On(ItemCreatedEvent @event)
+    {
+        var comment = new ItemDb
+        {
+            OrderId = @event.Id,
+            ItemId = @event.ItemId,
+            Label = @event.Label,
+            Price = @event.Price
+        };
+
+        await _itemRepository.CreateAsync(comment);
+    }
+
+    public async Task On(ItemUpdatedEvent @event)
+    {
+        ItemDb? item = await _itemRepository.GetByIdAsync(@event.ItemId);
+
+        if (item is null) return;
+
+        item.Label = @event.Label;
+        item.Price = @event.Price;
+
+        await _itemRepository.UpdateAsync(item);
+    }
+
+    public async Task On(ItemDeletedEvent @event)
+    {
+        await _itemRepository.DeleteAsync(@event.ItemId);
     }
 }

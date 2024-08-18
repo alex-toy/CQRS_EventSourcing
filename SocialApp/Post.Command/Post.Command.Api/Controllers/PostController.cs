@@ -1,8 +1,8 @@
 ﻿using CQRS.Core.Commands;
 using CQRS.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Post.Command.Api.Commands.Comments;
 using Post.Command.Api.Commands.Posts;
+using Post.Command.Api.Commands.Posts.Comments;
 using Post.Common.DTOs;
 
 namespace Post.Cmd.Api.Controllers

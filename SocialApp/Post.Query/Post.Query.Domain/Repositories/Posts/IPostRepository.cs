@@ -1,6 +1,6 @@
 ﻿using Post.Query.Domain.Entities.Posts;
 
-namespace Post.Query.Domain.Repositories;
+namespace Post.Query.Domain.Repositories.Posts;
 
 public interface IPostRepository
 {

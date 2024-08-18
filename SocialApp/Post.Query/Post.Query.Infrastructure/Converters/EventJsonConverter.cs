@@ -2,6 +2,7 @@
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
 using Post.Common.Events.Orders;
+using Post.Common.Events.Orders.Items;
 using Post.Common.Events.Posts;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -35,15 +36,19 @@ public class EventJsonConverter : JsonConverter<Event>
             nameof(PostCreatedEvent) => JsonSerializer.Deserialize<PostCreatedEvent>(json, options),
             nameof(PostUpdatedEvent) => JsonSerializer.Deserialize<PostUpdatedEvent>(json, options),
             nameof(PostLikedEvent) => JsonSerializer.Deserialize<PostLikedEvent>(json, options),
+            nameof(PostDeletedEvent) => JsonSerializer.Deserialize<PostDeletedEvent>(json, options),
 
             nameof(CommentCreatedEvent) => JsonSerializer.Deserialize<CommentCreatedEvent>(json, options),
             nameof(CommentUpdatedEvent) => JsonSerializer.Deserialize<CommentUpdatedEvent>(json, options),
             nameof(CommentDeletedEvent) => JsonSerializer.Deserialize<CommentDeletedEvent>(json, options),
-            nameof(PostDeletedEvent) => JsonSerializer.Deserialize<PostDeletedEvent>(json, options),
 
             nameof(OrderCreatedEvent) => JsonSerializer.Deserialize<OrderCreatedEvent>(json, options),
             nameof(OrderUpdatedEvent) => JsonSerializer.Deserialize<OrderUpdatedEvent>(json, options),
             nameof(OrderDeletedEvent) => JsonSerializer.Deserialize<OrderDeletedEvent>(json, options),
+
+            nameof(ItemCreatedEvent) => JsonSerializer.Deserialize<ItemCreatedEvent>(json, options),
+            nameof(ItemUpdatedEvent) => JsonSerializer.Deserialize<ItemUpdatedEvent>(json, options),
+            nameof(ItemDeletedEvent) => JsonSerializer.Deserialize<ItemDeletedEvent>(json, options),
 
             _ => throw new JsonException($"{typeDiscriminator} is not supported yet!")
         };
