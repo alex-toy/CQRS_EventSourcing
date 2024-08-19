@@ -1,4 +1,5 @@
 ﻿using CQRS.Core.Domain;
+using Post.Command.Domain.Bos;
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
 using Post.Common.Events.Posts;
@@ -9,7 +10,7 @@ public class PostAggregate : AggregateRoot
 {
     private bool _active;
     private string _author;
-    private readonly Dictionary<Guid, Tuple<string, string>> _comments = new();
+    private readonly Dictionary<Guid, CommentBo> _comments = new();
 
     public override bool Active
     {
@@ -43,6 +44,12 @@ public class PostAggregate : AggregateRoot
         _id = @event.Id;
     }
 
+    public void Apply(PostDeletedEvent @event)
+    {
+        _id = @event.Id;
+        _active = false;
+    }
+
     public void Apply(PostLikedEvent @event)
     {
         _id = @event.Id;
@@ -51,19 +58,13 @@ public class PostAggregate : AggregateRoot
     public void Apply(CommentCreatedEvent @event)
     {
         _id = @event.Id;
-        _comments.Add(@event.CommentId, new Tuple<string, string>(@event.Comment, @event.Username));
+        _comments.Add(@event.CommentId, new CommentBo { Author = @event.Username, Message = @event.Comment });
     }
 
     public void Apply(CommentUpdatedEvent @event)
     {
         _id = @event.Id;
-        _comments[@event.CommentId] = new Tuple<string, string>(@event.Comment, @event.Username);
-    }
-
-    public void Apply(PostDeletedEvent @event)
-    {
-        _id = @event.Id;
-        _active = false;
+        _comments[@event.CommentId] = new CommentBo { Author = @event.Username, Message = @event.Comment };
     }
 
     public void Apply(CommentDeletedEvent @event)
@@ -133,7 +134,7 @@ public class PostAggregate : AggregateRoot
             throw new InvalidOperationException("You cannot edit a comment of an inactive post!");
         }
 
-        if (!_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+        if (!_comments[commentId].Author.Equals(username, StringComparison.CurrentCultureIgnoreCase))
         {
             throw new InvalidOperationException("You are not allowed to edit a comment that was made by another user!");
         }
@@ -155,7 +156,7 @@ public class PostAggregate : AggregateRoot
             throw new InvalidOperationException("You cannot remove a comment of an inactive post!");
         }
 
-        if (!_comments[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+        if (!_comments[commentId].Author.Equals(username, StringComparison.CurrentCultureIgnoreCase))
         {
             throw new InvalidOperationException("You are not allowed to remove a comment that was made by another user!");
         }

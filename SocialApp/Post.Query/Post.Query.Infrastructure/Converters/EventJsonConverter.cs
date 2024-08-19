@@ -2,6 +2,7 @@
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
 using Post.Common.Events.Orders;
+using Post.Common.Events.Orders.Discounts;
 using Post.Common.Events.Orders.Items;
 using Post.Common.Events.Posts;
 using System.Text.Json;
@@ -49,6 +50,10 @@ public class EventJsonConverter : JsonConverter<Event>
             nameof(ItemCreatedEvent) => JsonSerializer.Deserialize<ItemCreatedEvent>(json, options),
             nameof(ItemUpdatedEvent) => JsonSerializer.Deserialize<ItemUpdatedEvent>(json, options),
             nameof(ItemDeletedEvent) => JsonSerializer.Deserialize<ItemDeletedEvent>(json, options),
+
+            nameof(DiscountCreatedEvent) => JsonSerializer.Deserialize<DiscountCreatedEvent>(json, options),
+            nameof(DiscountUpdatedEvent) => JsonSerializer.Deserialize<DiscountUpdatedEvent>(json, options),
+            nameof(DiscountDeletedEvent) => JsonSerializer.Deserialize<DiscountDeletedEvent>(json, options),
 
             _ => throw new JsonException($"{typeDiscriminator} is not supported yet!")
         };

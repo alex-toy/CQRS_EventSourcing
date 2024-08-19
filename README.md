@@ -17,7 +17,7 @@
 - Replay the event store to recreate the entire read database.
 - Replay the event store to recreate the entire read database into a different database type - PostgreSQL.
 
-## Prerequisites
+## Docker Setup
 
 1. Network :
 ```
@@ -25,8 +25,17 @@ docker network create --attachable -d bridge mydockernetwork
 ```
 
 2. Kafka :
+
+- run
 ```
-docker exec dotnetmicroservicescqrseventsourcingwithkafka_kafka_1 kafka-topics.sh  --bootstrap-server localhost:9092  --create --replication-factor 1 --partitions 1 --topic SocialMediaPostEvents
+docker-compose up -d
+```
+
+- get kafka container id
+
+- create topic *SocialMediaPostEvents*
+```
+docker exec <container_id> kafka-topics.sh  --bootstrap-server localhost:9092  --create --replication-factor 1 --partitions 1 --topic SocialMediaPostEvents
 ```
 
 3. Mongodb :
@@ -39,21 +48,11 @@ docker run -it -d --name mongo-container -p 27017:27017 --network mydockernetwor
 docker run -d --name sql-container --network mydockernetwork --restart always -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=$tr0ngS@P@ssw0rd02' -e 'MSSQL_PID=Express' -p 1433:1433 mcr.microsoft.com/mssql/server:2017-latest-ubuntu 
 ```
 
-5. APIs
-```
-docker-compose up -d
-```
-
 <img src="/pictures/docker.png" title="docker images"  width="900"> 
 
-Connect to the server using the following credentials :
-- Server name : localhost
-- no database name
-- user name : sa
-- Password : from docker command
-- No profile name
 
-5. Nuget Packages
+
+## Nuget Packages
 
 - in *CQRS.Core*
 ```
@@ -81,11 +80,25 @@ Microsoft.EntityFrameworkCore.Proxies
 Npgsql.EntityFrameworkCore.PostgreSQL
 ```
 
+
+
 ## Test API
 
-### Create Post
-<img src="/pictures/post_cmd_api.png" title="post cmd api"  width="900"> 
+1. run the query API with "SqlServerinit" connection string. Check the model has been mapped to the *SocialMedia* instance.
 
+2. connect to the SQL server with user *sa*. Run *login.sql*. 
+- Server name : localhost
+- no database name
+- user name : sa
+- Password : $tr0ngS@P@ssw0rd02
+- No profile name
 
+3. connect using *SMUser*
+- Server name : localhost
+- no database name
+- user name : SMUser
+- Password : SmPA$$06500
+- No profile name
 
+4. run APIs with "SqlServer" connection string
 

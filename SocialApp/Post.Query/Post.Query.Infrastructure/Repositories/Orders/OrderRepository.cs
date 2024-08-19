@@ -46,6 +46,7 @@ namespace Post.Query.Infrastructure.Repositories.Orders
             using DatabaseContext context = _contextFactory.CreateDbContext();
             return await context.Orders.AsNoTracking()
                     .Include(i => i.Items).AsNoTracking()
+                    .Include(i => i.Discount).AsNoTracking()
                     .ToListAsync();
         }
 

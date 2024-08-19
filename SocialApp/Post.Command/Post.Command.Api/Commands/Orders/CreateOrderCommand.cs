@@ -2,7 +2,7 @@
 
 namespace Post.Command.Api.Commands.Orders;
 
-public class CreateDiscountCommand : BaseCommand
+public class CreateOrderCommand : BaseCommand
 {
     public string Author { get; set; }
     public string Address { get; set; }

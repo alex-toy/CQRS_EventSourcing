@@ -57,6 +57,7 @@ public static class WebApplicationBuilderExtensions
     {
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<IItemRepository, ItemRepository>();
+        builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
         builder.Services.AddScoped<IOrderQueryHandler, OrderQueryHandler>();
 

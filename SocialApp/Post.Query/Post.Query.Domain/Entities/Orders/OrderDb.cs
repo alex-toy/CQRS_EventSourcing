@@ -13,4 +13,5 @@ public class OrderDb : Entity
     public string Address { get; set; }
     public bool IsEmergency { get; set; }
     public virtual ICollection<ItemDb> Items { get; set; }
+    public virtual DiscountDb Discount { get; set; }
 }

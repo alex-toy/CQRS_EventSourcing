@@ -1,8 +1,6 @@
-﻿using CQRS.Core.Commands;
+﻿namespace Post.Command.Domain.Bos;
 
-namespace Post.Command.Api.Commands.Discounts;
-
-public class CreateDiscountCommand : BaseCommand
+internal class DiscountBo
 {
     public double LowerThreshold { get; set; }
     public double UpperThreshold { get; set; }

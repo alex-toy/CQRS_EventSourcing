@@ -11,6 +11,7 @@ public class OrderDto
     public bool IsEmergency { get; set; }
     public double TotalPrice { get; set; }
     public virtual ICollection<ItemDb> Items { get; set; }
+    public DiscountDto Discount { get; set; }
 
     public static OrderDto GetDto(OrderDb orderDb)
     {
@@ -22,7 +23,25 @@ public class OrderDto
             Address = orderDb.Address,
             IsEmergency = orderDb.IsEmergency,
             Items = orderDb.Items,
-            TotalPrice = orderDb.Items.Sum(i => i.Quantity * i.Price)
+            Discount = DiscountDto.GetDto(orderDb.Discount),
+            TotalPrice = GetTotalPrice(orderDb)
         };
+    }
+
+    private static double GetTotalPrice(OrderDb orderDb)
+    {
+        double priceBeforeDiscount = orderDb.Items.Sum(i => i.Quantity * i.Price);
+
+        if (orderDb.Discount is null) return priceBeforeDiscount;
+
+        if (priceBeforeDiscount < orderDb.Discount.LowerThreshold) return priceBeforeDiscount;
+
+        if (priceBeforeDiscount > orderDb.Discount.LowerThreshold && priceBeforeDiscount < orderDb.Discount.LowerThreshold)
+        {
+            double delta = priceBeforeDiscount - orderDb.Discount.LowerThreshold;
+            return priceBeforeDiscount - delta * orderDb.Discount.Percentage;
+        }
+
+        return priceBeforeDiscount - (orderDb.Discount.UpperThreshold - orderDb.Discount.LowerThreshold) * orderDb.Discount.Percentage; ;
     }
 }

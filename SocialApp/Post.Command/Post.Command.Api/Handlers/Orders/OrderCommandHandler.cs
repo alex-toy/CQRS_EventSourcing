@@ -13,7 +13,7 @@ public class OrderCommandHandler : IOrderCommandHandler
         _eventSourcingHandler = eventSourcingHandler;
     }
 
-    public async Task HandleAsync(CreateDiscountCommand command)
+    public async Task HandleAsync(CreateOrderCommand command)
     {
         OrderAggregate aggregate = new(command.Id, command.Author, command.Address, command.IsEmergency);
 

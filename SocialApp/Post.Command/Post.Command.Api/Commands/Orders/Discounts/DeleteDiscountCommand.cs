@@ -2,7 +2,7 @@
 
 namespace Post.Command.Api.Commands.Discounts;
 
-public class DeleteDiscountsCommand : BaseCommand
+public class DeleteDiscountCommand : BaseCommand
 {
-    public int DiscountId { get; set; }
+    public Guid DiscountId { get; set; }
 }

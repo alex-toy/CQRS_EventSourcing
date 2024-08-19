@@ -1,6 +1,7 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using CQRS.Core.Domain;
+﻿using CQRS.Core.Domain;
+using Post.Command.Domain.Bos;
 using Post.Common.Events.Orders;
+using Post.Common.Events.Orders.Discounts;
 using Post.Common.Events.Orders.Items;
 
 namespace Post.Command.Domain;
@@ -8,7 +9,8 @@ namespace Post.Command.Domain;
 public class OrderAggregate : AggregateRoot
 {
     private string _author;
-    private readonly Dictionary<Guid, Tuple<string, double, int>> _items = new();
+    private readonly Dictionary<Guid, ItemBo> _items = new();
+    private DiscountBo _discount;
 
     public OrderAggregate()
     {
@@ -44,13 +46,13 @@ public class OrderAggregate : AggregateRoot
     public void Apply(ItemCreatedEvent @event)
     {
         _id = @event.Id;
-        _items.Add(@event.ItemId, new Tuple<string, double, int>(@event.Label, @event.Price, @event.Quantity));
+        _items.Add(@event.ItemId, new ItemBo { Label = @event.Label, Price = @event.Price, Quantity = @event.Quantity });
     }
 
     public void Apply(ItemUpdatedEvent @event)
     {
         _id = @event.Id;
-        _items[@event.ItemId] = new Tuple<string, double, int>(@event.Label, @event.Price, @event.Quantity);
+        _items[@event.ItemId] = new ItemBo { Label = @event.Label, Price = @event.Price, Quantity = @event.Quantity };
     }
 
     public void Apply(ItemDeletedEvent @event)
@@ -87,7 +89,7 @@ public class OrderAggregate : AggregateRoot
         });
     }
 
-    public void AddItem(string label, double price, int quantity)
+    public void CreateItem(string label, double price, int quantity)
     {
         if (string.IsNullOrWhiteSpace(label))
         {
@@ -104,7 +106,7 @@ public class OrderAggregate : AggregateRoot
         });
     }
 
-    public void EditItem(Guid itemId, string label, double price, int quantity)
+    public void UpdateItem(Guid itemId, string label, double price, int quantity)
     {
         //if (!_items[itemId].Item2.Equals(price, StringComparison.CurrentCultureIgnoreCase))
         //{
@@ -122,7 +124,7 @@ public class OrderAggregate : AggregateRoot
         });
     }
 
-    public void RemoveItem(Guid itemId)
+    public void DeleteItem(Guid itemId)
     {
         //if (!_items[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
         //{
@@ -133,6 +135,68 @@ public class OrderAggregate : AggregateRoot
         {
             Id = _id,
             ItemId = itemId
+        });
+    }
+
+    public void Apply(DiscountCreatedEvent @event)
+    {
+        if (_discount is not null) throw new InvalidOperationException("You already have a discount!");
+        _id = @event.Id;
+        _discount = new DiscountBo { 
+            LowerThreshold = @event.LowerThreshold,
+            UpperThreshold = @event.UpperThreshold,
+            Percentage = @event.Percentage
+        };
+    }
+
+    public void Apply(DiscountUpdatedEvent @event)
+    {
+        _id = @event.Id;
+        _discount = new DiscountBo
+        {
+            LowerThreshold = @event.LowerThreshold,
+            UpperThreshold = @event.UpperThreshold,
+            Percentage = @event.Percentage
+        };
+    }
+
+    public void Apply(DiscountDeletedEvent @event)
+    {
+        _id = @event.Id;
+        _discount = null;
+    }
+
+    public void CreateDiscount(double lowerThreshold, double upperThreshold, double percentage)
+    {
+        RaiseEvent(new DiscountCreatedEvent
+        {
+            Id = _id,
+            DiscountId = Guid.NewGuid(),
+            LowerThreshold = lowerThreshold,
+            UpperThreshold = upperThreshold,
+            Percentage = percentage
+        });
+    }
+
+    public void UpdateDiscount(Guid discountId, double lowerThreshold, double upperThreshold, double percentage)
+    {
+        RaiseEvent(new DiscountUpdatedEvent
+        {
+            Id = _id,
+            DiscountId = Guid.NewGuid(),
+            LowerThreshold = lowerThreshold,
+            UpperThreshold = upperThreshold,
+            Percentage = percentage,
+            EditDate = DateTime.Now
+        });
+    }
+
+    public void DeleteDiscount(Guid discountId)
+    {
+        RaiseEvent(new DiscountDeletedEvent
+        {
+            Id = _id,
+            DiscountId = discountId
         });
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CQRS.Core.Commands;
 using CQRS.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Post.Command.Api.Commands.Discounts;
 using Post.Command.Api.Commands.Orders;
 using Post.Command.Api.Commands.Orders.Items;
 using Post.Common.DTOs;
@@ -21,7 +22,7 @@ namespace Post.Cmd.Api.Controllers
         }
 
         [HttpPost("CreateOrder")]
-        public async Task<ActionResult> CreateOrderAsync(CreateDiscountCommand command)
+        public async Task<ActionResult> CreateOrderAsync(CreateOrderCommand command)
         {
             Guid id = Guid.NewGuid();
             command.Id = id;
@@ -261,19 +262,17 @@ namespace Post.Cmd.Api.Controllers
             }
         }
 
-        [HttpPost("CreateDiscount")]
-        public async Task<ActionResult> CreateDiscountAsync(CreateDiscountCommand command)
+        [HttpPost("CreateDiscount/{id}")]
+        public async Task<ActionResult> CreateDiscountAsync(Guid id, CreateDiscountCommand command)
         {
-            Guid guid = Guid.NewGuid();
-            command.Id = guid;
             try
             {
+                command.Id = id;
                 await _commandDispatcher.SendAsync(command);
 
-                return StatusCode(StatusCodes.Status201Created, new
+                return Ok(new BaseResponse
                 {
-                    Id = guid,
-                    Message = "New discount creation request completed successfully!"
+                    Message = "Add discount request completed successfully!"
                 });
             }
             catch (InvalidOperationException ex)
@@ -284,14 +283,21 @@ namespace Post.Cmd.Api.Controllers
                     Message = ex.Message
                 });
             }
+            catch (AggregateNotFoundException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
             catch (Exception ex)
             {
-                const string SAFE_ERROR_MESSAGE = "Error while processing request to create a new discount!";
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to add an discount to an order!";
                 _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
 
-                return StatusCode(StatusCodes.Status500InternalServerError, new
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
                 {
-                    Id = guid,
                     Message = SAFE_ERROR_MESSAGE
                 });
             }

@@ -1,4 +1,5 @@
 ﻿using Post.Common.Events.Orders;
+using Post.Common.Events.Orders.Discounts;
 using Post.Common.Events.Orders.Items;
 using Post.Query.Domain.Entities.Orders;
 using Post.Query.Domain.Repositories.Orders;
@@ -9,11 +10,13 @@ public class OrderEventHandler : IOrderEventHandler
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IItemRepository _itemRepository;
+    private readonly IDiscountRepository _discountRepository;
 
-    public OrderEventHandler(IOrderRepository orderRepository, IItemRepository itemRepository)
+    public OrderEventHandler(IOrderRepository orderRepository, IItemRepository itemRepository, IDiscountRepository discountRepository)
     {
         _orderRepository = orderRepository;
         _itemRepository = itemRepository;
+        _discountRepository = discountRepository;
     }
 
     public async Task On(OrderCreatedEvent @event)
@@ -76,5 +79,36 @@ public class OrderEventHandler : IOrderEventHandler
     public async Task On(ItemDeletedEvent @event)
     {
         await _itemRepository.DeleteAsync(@event.ItemId);
+    }
+
+    public async Task On(DiscountCreatedEvent @event)
+    {
+        var discount = new DiscountDb
+        {
+            OrderId = @event.Id,
+            LowerThreshold = @event.LowerThreshold,
+            UpperThreshold = @event.UpperThreshold,
+            Percentage = @event.Percentage
+        };
+
+        await _discountRepository.CreateAsync(discount);
+    }
+
+    public async Task On(DiscountUpdatedEvent @event)
+    {
+        DiscountDb? discount = await _discountRepository.GetByIdAsync(@event.DiscountId);
+
+        if (discount is null) return;
+
+        discount.LowerThreshold = @event.LowerThreshold;
+        discount.UpperThreshold = @event.UpperThreshold;
+        discount.Percentage = @event.Percentage;
+
+        await _discountRepository.UpdateAsync(discount);
+    }
+
+    public async Task On(DiscountDeletedEvent @event)
+    {
+        await _discountRepository.DeleteAsync(@event.DiscountId);
     }
 }

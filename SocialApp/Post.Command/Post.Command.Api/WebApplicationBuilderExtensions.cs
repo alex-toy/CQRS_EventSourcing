@@ -1,10 +1,12 @@
 ﻿using Confluent.Kafka;
 using CQRS.Core.Events;
 using MongoDB.Bson.Serialization;
+using Post.Command.Api.Commands.Discounts;
 using Post.Command.Api.Commands.Orders;
 using Post.Command.Api.Commands.Orders.Items;
 using Post.Command.Api.Commands.Posts;
 using Post.Command.Api.Commands.Posts.Comments;
+using Post.Command.Api.Handlers.Discounts;
 using Post.Command.Api.Handlers.Orders;
 using Post.Command.Api.Handlers.Orders.Items;
 using Post.Command.Api.Handlers.Posts;
@@ -15,6 +17,7 @@ using Post.Command.Infrastructure.Configs;
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
 using Post.Common.Events.Orders;
+using Post.Common.Events.Orders.Discounts;
 using Post.Common.Events.Orders.Items;
 using Post.Common.Events.Posts;
 
@@ -42,6 +45,10 @@ public static class WebApplicationBuilderExtensions
         BsonClassMap.RegisterClassMap<ItemCreatedEvent>();
         BsonClassMap.RegisterClassMap<ItemUpdatedEvent>();
         BsonClassMap.RegisterClassMap<ItemDeletedEvent>();
+
+        BsonClassMap.RegisterClassMap<DiscountCreatedEvent>();
+        BsonClassMap.RegisterClassMap<DiscountUpdatedEvent>();
+        BsonClassMap.RegisterClassMap<DiscountDeletedEvent>();
     }
 
     public static void ConfigureMongo(this WebApplicationBuilder builder)
@@ -80,9 +87,10 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddScoped<IEventSourcingHandler<OrderAggregate>, EventSourcingHandler<OrderAggregate>>();
         builder.Services.AddScoped<IOrderCommandHandler, OrderCommandHandler>();
         builder.Services.AddScoped<IItemCommandHandler, ItemCommandHandler>();
+        builder.Services.AddScoped<IDiscountCommandHandler, DiscountCommandHandler>();
 
         IOrderCommandHandler orderCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IOrderCommandHandler>();
-        dispatcher.RegisterHandler<CreateDiscountCommand>(orderCommandHandler.HandleAsync);
+        dispatcher.RegisterHandler<CreateOrderCommand>(orderCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<UpdateOrderCommand>(orderCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<DeleteOrderCommand>(orderCommandHandler.HandleAsync);
 
@@ -90,5 +98,10 @@ public static class WebApplicationBuilderExtensions
         dispatcher.RegisterHandler<CreateItemCommand>(itemCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<UpdateItemCommand>(itemCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<DeleteItemCommand>(itemCommandHandler.HandleAsync);
+
+        IDiscountCommandHandler discountCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IDiscountCommandHandler>();
+        dispatcher.RegisterHandler<CreateDiscountCommand>(discountCommandHandler.HandleAsync);
+        dispatcher.RegisterHandler<UpdateDiscountCommand>(discountCommandHandler.HandleAsync);
+        dispatcher.RegisterHandler<DeleteDiscountCommand>(discountCommandHandler.HandleAsync);
     }
 }
