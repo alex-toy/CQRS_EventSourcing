@@ -82,7 +82,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddScoped<IItemCommandHandler, ItemCommandHandler>();
 
         IOrderCommandHandler orderCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IOrderCommandHandler>();
-        dispatcher.RegisterHandler<CreateOrderCommand>(orderCommandHandler.HandleAsync);
+        dispatcher.RegisterHandler<CreateDiscountCommand>(orderCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<UpdateOrderCommand>(orderCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<DeleteOrderCommand>(orderCommandHandler.HandleAsync);
 

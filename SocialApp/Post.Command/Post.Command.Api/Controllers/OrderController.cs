@@ -21,7 +21,7 @@ namespace Post.Cmd.Api.Controllers
         }
 
         [HttpPost("CreateOrder")]
-        public async Task<ActionResult> CreateOrderAsync(CreateOrderCommand command)
+        public async Task<ActionResult> CreateOrderAsync(CreateDiscountCommand command)
         {
             Guid id = Guid.NewGuid();
             command.Id = id;
@@ -256,6 +256,42 @@ namespace Post.Cmd.Api.Controllers
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
                 {
+                    Message = SAFE_ERROR_MESSAGE
+                });
+            }
+        }
+
+        [HttpPost("CreateDiscount")]
+        public async Task<ActionResult> CreateDiscountAsync(CreateDiscountCommand command)
+        {
+            Guid guid = Guid.NewGuid();
+            command.Id = guid;
+            try
+            {
+                await _commandDispatcher.SendAsync(command);
+
+                return StatusCode(StatusCodes.Status201Created, new
+                {
+                    Id = guid,
+                    Message = "New discount creation request completed successfully!"
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to create a new discount!";
+                _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    Id = guid,
                     Message = SAFE_ERROR_MESSAGE
                 });
             }
