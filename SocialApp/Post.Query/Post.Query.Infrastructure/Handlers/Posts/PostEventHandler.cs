@@ -44,7 +44,7 @@ public class PostEventHandler : IPostEventHandler
     {
         PostDb post = await _postRepository.GetByIdAsync(@event.Id);
 
-        if (post == null) return;
+        if (post is null) return;
 
         post.Likes++;
         await _postRepository.UpdateAsync(post);

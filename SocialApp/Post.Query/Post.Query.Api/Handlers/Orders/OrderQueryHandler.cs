@@ -20,8 +20,8 @@ public class OrderQueryHandler : IOrderQueryHandler
 
     public async Task<List<OrderDb>> HandleAsync(GetOrderByIdQuery query)
     {
-        OrderDb order = await _orderRepository.GetByIdAsync(query.Id);
-        return new List<OrderDb> { order };
+        OrderDb? order = await _orderRepository.GetByIdAsync(query.Id);
+        return order is not null ? new List<OrderDb> { order } : new List<OrderDb>();
     }
 
     public async Task<List<OrderDb>> HandleAsync(GetOrdersWithItemsQuery query)

@@ -5,13 +5,13 @@ namespace Post.Query.Api.Dtos;
 public class OrderDto
 {
     public Guid OrderId { get; set; }
-    public string Author { get; set; }
+    public string Author { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
-    public string Address { get; set; }
+    public string Address { get; set; } = string.Empty;
     public bool IsEmergency { get; set; }
     public double TotalPrice { get; set; }
-    public virtual ICollection<ItemDb> Items { get; set; }
-    public DiscountDto Discount { get; set; }
+    public virtual ICollection<ItemDb> Items { get; set; } = new List<ItemDb>();
+    public DiscountDto Discount { get; set; } = new DiscountDto();
 
     public static OrderDto GetDto(OrderDb orderDb)
     {
@@ -23,7 +23,7 @@ public class OrderDto
             Address = orderDb.Address,
             IsEmergency = orderDb.IsEmergency,
             Items = orderDb.Items,
-            Discount = DiscountDto.GetDto(orderDb.Discount),
+            Discount = orderDb.Discount is not null ? DiscountDto.GetDto(orderDb.Discount) : new DiscountDto(),
             TotalPrice = GetTotalPrice(orderDb)
         };
     }

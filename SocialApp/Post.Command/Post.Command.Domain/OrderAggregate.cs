@@ -1,5 +1,6 @@
 ﻿using CQRS.Core.Domain;
 using Post.Command.Domain.Bos;
+using Post.Command.Domain.Rules;
 using Post.Common.Events.Orders;
 using Post.Common.Events.Orders.Discounts;
 using Post.Common.Events.Orders.Items;
@@ -23,7 +24,8 @@ public class OrderAggregate : AggregateRoot
             Id = id,
             Author = author,
             Address = address,
-            IsEmergency = isEmergency
+            IsEmergency = isEmergency,
+            CreatedAt = DateTime.UtcNow
         });
     }
 
@@ -63,10 +65,7 @@ public class OrderAggregate : AggregateRoot
 
     public void UpdateOrder(string address, bool isEmergency)
     {
-        if (string.IsNullOrEmpty(address))
-        {
-            throw new InvalidOperationException($"Please provide a valid {nameof(address)}!");
-        }
+        address.CheckAddressRule($"Please provide a valid {nameof(address)}!");
 
         RaiseEvent(new OrderUpdatedEvent
         {
@@ -78,10 +77,7 @@ public class OrderAggregate : AggregateRoot
 
     public void DeleteOrder(string author)
     {
-        if (!_author.Equals(author, StringComparison.CurrentCultureIgnoreCase))
-        {
-            throw new InvalidOperationException("You are not allowed to delete an order that was made by someone else!");
-        }
+        author.CheckAuthorRule("You are not allowed to delete an order that was made by someone else!");
 
         RaiseEvent(new OrderDeletedEvent
         {
@@ -91,10 +87,7 @@ public class OrderAggregate : AggregateRoot
 
     public void CreateItem(string label, double price, int quantity)
     {
-        if (string.IsNullOrWhiteSpace(label))
-        {
-            throw new InvalidOperationException($"The value of {nameof(label)} cannot be null or empty. Please provide a valid {nameof(label)}!");
-        }
+        label.CheckLabelRules($"The value of {nameof(label)} cannot be null or empty. Please provide a valid {nameof(label)}!");
 
         RaiseEvent(new ItemCreatedEvent
         {
@@ -108,10 +101,7 @@ public class OrderAggregate : AggregateRoot
 
     public void UpdateItem(Guid itemId, string label, double price, int quantity)
     {
-        //if (!_items[itemId].Item2.Equals(price, StringComparison.CurrentCultureIgnoreCase))
-        //{
-        //    throw new InvalidOperationException("You are not allowed to edit a comment that was made by another user!");
-        //}
+        _items[itemId].Price.CheckPriceRule("Price should be positive");
 
         RaiseEvent(new ItemUpdatedEvent
         {
@@ -126,11 +116,6 @@ public class OrderAggregate : AggregateRoot
 
     public void DeleteItem(Guid itemId)
     {
-        //if (!_items[commentId].Item2.Equals(username, StringComparison.CurrentCultureIgnoreCase))
-        //{
-        //    throw new InvalidOperationException("You are not allowed to remove a comment that was made by another user!");
-        //}
-
         RaiseEvent(new ItemDeletedEvent
         {
             Id = _id,
@@ -140,9 +125,12 @@ public class OrderAggregate : AggregateRoot
 
     public void Apply(DiscountCreatedEvent @event)
     {
-        if (_discount is not null) throw new InvalidOperationException("You already have a discount!");
+        _discount.CheckDiscountUnicityRule();
+        @event.CheckDiscountRules();
+
         _id = @event.Id;
-        _discount = new DiscountBo { 
+        _discount = new DiscountBo
+        {
             LowerThreshold = @event.LowerThreshold,
             UpperThreshold = @event.UpperThreshold,
             Percentage = @event.Percentage
@@ -151,6 +139,8 @@ public class OrderAggregate : AggregateRoot
 
     public void Apply(DiscountUpdatedEvent @event)
     {
+        @event.CheckDiscountRules();
+
         _id = @event.Id;
         _discount = new DiscountBo
         {
@@ -183,7 +173,7 @@ public class OrderAggregate : AggregateRoot
         RaiseEvent(new DiscountUpdatedEvent
         {
             Id = _id,
-            DiscountId = Guid.NewGuid(),
+            DiscountId = discountId,
             LowerThreshold = lowerThreshold,
             UpperThreshold = upperThreshold,
             Percentage = percentage,

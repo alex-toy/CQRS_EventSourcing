@@ -8,10 +8,10 @@ public class OrderDb : Entity
 {
     [Key]
     public Guid OrderId { get; set; }
-    public string Author { get; set; }
+    public string Author { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
-    public string Address { get; set; }
+    public string Address { get; set; } = string.Empty;
     public bool IsEmergency { get; set; }
-    public virtual ICollection<ItemDb> Items { get; set; }
-    public virtual DiscountDb Discount { get; set; }
+    public virtual ICollection<ItemDb> Items { get; set; } = new List<ItemDb>();
+    public virtual DiscountDb Discount { get; set; } = new DiscountDb();
 }

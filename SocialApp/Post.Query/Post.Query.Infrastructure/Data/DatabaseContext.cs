@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Post.Query.Domain.Entities.Deliveries;
 using Post.Query.Domain.Entities.Orders;
 using Post.Query.Domain.Entities.Posts;
 
@@ -16,4 +17,6 @@ public class DatabaseContext : DbContext
     public DbSet<OrderDb> Orders { get; set; }
     public DbSet<ItemDb> Items { get; set; }
     public DbSet<DiscountDb> Discounts { get; set; }
+
+    public DbSet<DeliveryDb> Deliveries { get; set; }
 }

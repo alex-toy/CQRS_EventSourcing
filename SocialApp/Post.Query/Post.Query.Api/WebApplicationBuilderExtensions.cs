@@ -1,9 +1,12 @@
 ﻿using CQRS.Core.Queries;
 using Microsoft.EntityFrameworkCore;
+using Post.Query.Api.Handlers.Deliveries;
 using Post.Query.Api.Handlers.Orders;
 using Post.Query.Api.Handlers.Posts;
+using Post.Query.Api.Queries.Deliveries;
 using Post.Query.Api.Queries.Orders;
 using Post.Query.Api.Queries.Posts;
+using Post.Query.Domain.Entities.Deliveries;
 using Post.Query.Domain.Entities.Orders;
 using Post.Query.Domain.Entities.Posts;
 using Post.Query.Domain.Repositories.Orders;
@@ -12,6 +15,7 @@ using Post.Query.Infrastructure.Data;
 using Post.Query.Infrastructure.Dispatchers;
 using Post.Query.Infrastructure.Handlers.Orders;
 using Post.Query.Infrastructure.Handlers.Posts;
+using Post.Query.Infrastructure.Repositories.Deliveries;
 using Post.Query.Infrastructure.Repositories.Orders;
 using Post.Query.Infrastructure.Repositories.Posts;
 
@@ -22,7 +26,7 @@ public static class WebApplicationBuilderExtensions
     public static void ConfigureDatabase(this WebApplicationBuilder builder)
     {
         string SQLConnectionString = builder.Configuration.GetConnectionString("SqlServer")!;
-        Action<DbContextOptionsBuilder> configureDbContext = o => o.UseLazyLoadingProxies().UseSqlServer(SQLConnectionString);
+        Action<DbContextOptionsBuilder> configureDbContext = o => o.UseLazyLoadingProxies().UseSqlServer(SQLConnectionString, b => b.MigrationsAssembly("Post.Query.Api"));
         builder.Services.AddDbContext<DatabaseContext>(configureDbContext);
         builder.Services.AddSingleton<DatabaseContextFactory>(new DatabaseContextFactory(configureDbContext));
 
@@ -69,11 +73,27 @@ public static class WebApplicationBuilderExtensions
 
         orderDispatcher.RegisterHandler<GetAllOrdersQuery>(orderQueryHandler.HandleAsync);
         orderDispatcher.RegisterHandler<GetOrderByIdQuery>(orderQueryHandler.HandleAsync);
+        orderDispatcher.RegisterHandler<GetOrdersWithItemsQuery>(orderQueryHandler.HandleAsync);
 
         builder.Services.AddSingleton<IQueryDispatcher<OrderDb>>(_ => orderDispatcher);
     }
 
-    public static void Configure(this WebApplicationBuilder builder)
+    public static void ConfigureDeliveries(this WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<IDeliveryRepository, DeliveryRepository>();
+
+        builder.Services.AddScoped<IDeliveryQueryHandler, DeliveryQueryHandler>();
+
+        builder.Services.AddScoped<IOrderEventHandler, OrderEventHandler>();
+
+        QueryDispatcher<DeliveryDb> dispatcher = new();
+
+        IDeliveryQueryHandler queryHandler = builder.Services.BuildServiceProvider().GetRequiredService<IDeliveryQueryHandler>();
+
+        dispatcher.RegisterHandler<GetAllDeliveriesQuery>(queryHandler.HandleAsync);
+        dispatcher.RegisterHandler<GetDeliveryByIdQuery>(queryHandler.HandleAsync);
+        dispatcher.RegisterHandler<GetDeliveriesWithOrdersQuery>(queryHandler.HandleAsync);
+
+        builder.Services.AddSingleton<IQueryDispatcher<DeliveryDb>>(_ => dispatcher);
     }
 }

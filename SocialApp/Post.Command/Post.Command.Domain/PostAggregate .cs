@@ -1,5 +1,6 @@
 ﻿using CQRS.Core.Domain;
 using Post.Command.Domain.Bos;
+using Post.Command.Domain.Rules;
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
 using Post.Common.Events.Posts;
@@ -75,15 +76,9 @@ public class PostAggregate : AggregateRoot
 
     public void EditMessage(string message)
     {
-        if (!_active)
-        {
-            throw new InvalidOperationException("You cannot edit the message of an inactive post!");
-        }
+        _active.CheckActiveRule("You cannot edit the message of an inactive post!");
 
-        if (string.IsNullOrWhiteSpace(message))
-        {
-            throw new InvalidOperationException($"The value of {nameof(message)} cannot be null or empty. Please provide a valid {nameof(message)}!");
-        }
+        CheckMessageRule(message, $"The value of {nameof(message)} cannot be null or empty. Please provide a valid {nameof(message)}!");
 
         RaiseEvent(new PostUpdatedEvent
         {
@@ -92,12 +87,17 @@ public class PostAggregate : AggregateRoot
         });
     }
 
+    private static void CheckMessageRule(string message, string errorMessage)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            throw new InvalidOperationException(errorMessage);
+        }
+    }
+
     public void LikePost()
     {
-        if (!_active)
-        {
-            throw new InvalidOperationException("You cannot like an inactive post!");
-        }
+        _active.CheckActiveRule("You cannot like an inactive post!");
 
         RaiseEvent(new PostLikedEvent
         {
@@ -107,15 +107,9 @@ public class PostAggregate : AggregateRoot
 
     public void AddComment(string comment, string username)
     {
-        if (!_active)
-        {
-            throw new InvalidOperationException("You cannot add a comment to an inactive post!");
-        }
+        _active.CheckActiveRule("You cannot add a comment to an inactive post!");
 
-        if (string.IsNullOrWhiteSpace(comment))
-        {
-            throw new InvalidOperationException($"The value of {nameof(comment)} cannot be null or empty. Please provide a valid {nameof(comment)}!");
-        }
+        comment.CheckCommentRule($"The value of {nameof(comment)} cannot be null or empty. Please provide a valid {nameof(comment)}!");
 
         RaiseEvent(new CommentCreatedEvent
         {
@@ -129,15 +123,9 @@ public class PostAggregate : AggregateRoot
 
     public void EditComment(Guid commentId, string comment, string username)
     {
-        if (!_active)
-        {
-            throw new InvalidOperationException("You cannot edit a comment of an inactive post!");
-        }
+        _active.CheckActiveRule("You cannot edit a comment of an inactive post!");
 
-        if (!_comments[commentId].Author.Equals(username, StringComparison.CurrentCultureIgnoreCase))
-        {
-            throw new InvalidOperationException("You are not allowed to edit a comment that was made by another user!");
-        }
+        _comments[commentId].Author.CheckAuthorRule(username, "You are not allowed to edit a comment that was made by another user!");
 
         RaiseEvent(new CommentUpdatedEvent
         {
@@ -151,15 +139,9 @@ public class PostAggregate : AggregateRoot
 
     public void RemoveComment(Guid commentId, string username)
     {
-        if (!_active)
-        {
-            throw new InvalidOperationException("You cannot remove a comment of an inactive post!");
-        }
+        _active.CheckActiveRule("You cannot remove a comment of an inactive post!");
 
-        if (!_comments[commentId].Author.Equals(username, StringComparison.CurrentCultureIgnoreCase))
-        {
-            throw new InvalidOperationException("You are not allowed to remove a comment that was made by another user!");
-        }
+        _comments[commentId].Author.CheckAuthorRule(username, "You are not allowed to remove a comment that was made by another user!");
 
         RaiseEvent(new CommentDeletedEvent
         {
@@ -170,15 +152,9 @@ public class PostAggregate : AggregateRoot
 
     public void DeletePost(string username)
     {
-        if (!_active)
-        {
-            throw new InvalidOperationException("The post has already been removed!");
-        }
+        _active.CheckActiveRule("The post has already been removed!");
 
-        if (!_author.Equals(username, StringComparison.CurrentCultureIgnoreCase))
-        {
-            throw new InvalidOperationException("You are not allowed to delete a post that was made by someone else!");
-        }
+        _author.CheckAuthorRule(username, "You are not allowed to remove a comment that was made by another user!");
 
         RaiseEvent(new PostDeletedEvent
         {
