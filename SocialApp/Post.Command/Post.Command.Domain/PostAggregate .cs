@@ -3,6 +3,7 @@ using Post.Command.Domain.Bos;
 using Post.Command.Domain.Rules;
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
+using Post.Common.Events.Deliveries.Orders;
 using Post.Common.Events.Posts;
 
 namespace Post.Command.Domain;

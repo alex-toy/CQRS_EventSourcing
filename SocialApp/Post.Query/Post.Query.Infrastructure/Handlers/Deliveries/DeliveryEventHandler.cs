@@ -38,8 +38,8 @@ public class DeliveryEventHandler : IDeliveryEventHandler
         await _deliveryRepository.UpdateAsync(delivery);
     }
 
-    //public async Task On(OrderDeletedEvent @event)
-    //{
-    //    await _orderRepository.DeleteAsync(@event.AggregateId);
-    //}
+    public async Task On(DeliveryDeletedEvent @event)
+    {
+        await _deliveryRepository.DeleteAsync(@event.AggregateId);
+    }
 }

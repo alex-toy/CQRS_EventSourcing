@@ -1,5 +1,6 @@
 ﻿using Post.Common.Comments;
 using Post.Common.Events.Comments;
+using Post.Common.Events.Deliveries.Orders;
 using Post.Common.Events.Posts;
 using Post.Query.Domain.Entities.Posts;
 using Post.Query.Domain.Repositories.Posts;

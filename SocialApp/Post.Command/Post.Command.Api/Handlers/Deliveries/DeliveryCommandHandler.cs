@@ -1,5 +1,6 @@
 ﻿using CQRS.Core.Events;
 using Post.Command.Api.Commands.Deliveries;
+using Post.Command.Api.Commands.Deliveries.Orders;
 using Post.Command.Domain;
 
 namespace Post.Command.Api.Handlers.Deliveries;
@@ -28,24 +29,11 @@ public class DeliveryCommandHandler : IDeliveryCommandHandler
         await _eventSourcingHandler.SaveAsync(aggregate);
     }
 
-    //public async Task HandleAsync(LikePostCommand command)
-    //{
-    //    PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
-    //    aggregate.LikePost();
+    public async Task HandleAsync(DeleteDeliveryCommand command)
+    {
+        DeliveryAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
+        aggregate.Delete();
 
-    //    await _eventSourcingHandler.SaveAsync(aggregate);
-    //}
-
-    //public async Task HandleAsync(DeletePostCommand command)
-    //{
-    //    PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
-    //    aggregate.DeletePost(command.UserName);
-
-    //    await _eventSourcingHandler.SaveAsync(aggregate);
-    //}
-
-    //public async Task HandleAsync(RestoreReadDbCommand command)
-    //{
-    //    await _eventSourcingHandler.RepublishEventsAsync();
-    //}
+        await _eventSourcingHandler.SaveAsync(aggregate);
+    }
 }

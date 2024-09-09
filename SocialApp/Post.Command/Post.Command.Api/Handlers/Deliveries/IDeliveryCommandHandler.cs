@@ -6,7 +6,5 @@ public interface IDeliveryCommandHandler
 {
     Task HandleAsync(CreateDeliveryCommand command);
     Task HandleAsync(UpdateDeliveryCommand command);
-    //Task HandleAsync(AddOrderCommand command);
-    //Task HandleAsync(LikePostCommand command);
-    //Task HandleAsync(DeletePostCommand command);
+    Task HandleAsync(DeleteDeliveryCommand command);
 }

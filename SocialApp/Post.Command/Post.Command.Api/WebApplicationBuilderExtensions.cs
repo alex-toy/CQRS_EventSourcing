@@ -2,12 +2,14 @@
 using CQRS.Core.Events;
 using MongoDB.Bson.Serialization;
 using Post.Command.Api.Commands.Deliveries;
+using Post.Command.Api.Commands.Deliveries.Orders;
 using Post.Command.Api.Commands.Discounts;
 using Post.Command.Api.Commands.Orders;
 using Post.Command.Api.Commands.Orders.Items;
 using Post.Command.Api.Commands.Posts;
 using Post.Command.Api.Commands.Posts.Comments;
 using Post.Command.Api.Handlers.Deliveries;
+using Post.Command.Api.Handlers.Deliveries.Orders;
 using Post.Command.Api.Handlers.Discounts;
 using Post.Command.Api.Handlers.Orders;
 using Post.Command.Api.Handlers.Orders.Items;
@@ -55,7 +57,7 @@ public static class WebApplicationBuilderExtensions
 
         BsonClassMap.RegisterClassMap<DeliveryCreatedEvent>();
         BsonClassMap.RegisterClassMap<DeliveryUpdatedEvent>();
-        //BsonClassMap.RegisterClassMap<DeliveryDeletedEvent>();
+        BsonClassMap.RegisterClassMap<DeliveryDeletedEvent>();
     }
 
     public static void ConfigureMongo(this WebApplicationBuilder builder)
@@ -116,10 +118,15 @@ public static class WebApplicationBuilderExtensions
     {
         builder.Services.AddScoped<IEventSourcingHandler<DeliveryAggregate>, EventSourcingHandler<DeliveryAggregate>>();
         builder.Services.AddScoped<IDeliveryCommandHandler, DeliveryCommandHandler>();
+        builder.Services.AddScoped<IDeliveryOrderCommandHandler, DeliveryOrderCommandHandler>();
 
         IDeliveryCommandHandler commandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IDeliveryCommandHandler>();
         dispatcher.RegisterHandler<CreateDeliveryCommand>(commandHandler.HandleAsync);
         dispatcher.RegisterHandler<UpdateDeliveryCommand>(commandHandler.HandleAsync);
-        //dispatcher.RegisterHandler<DeleteOrderCommand>(commandHandler.HandleAsync);
+        dispatcher.RegisterHandler<DeleteDeliveryCommand>(commandHandler.HandleAsync);
+
+        IDeliveryOrderCommandHandler commentCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IDeliveryOrderCommandHandler>();
+        dispatcher.RegisterHandler<AddOrderCommand>(commentCommandHandler.HandleAsync);
+        dispatcher.RegisterHandler<RemoveOrderCommand>(commentCommandHandler.HandleAsync);
     }
 }

@@ -1,5 +1,4 @@
-﻿using Post.Common.Events.Comments;
-using Post.Common.Events.Orders;
+﻿using Post.Common.Events.Orders;
 using Post.Common.Events.Orders.Items;
 
 namespace Post.Query.Infrastructure.Handlers.Orders;

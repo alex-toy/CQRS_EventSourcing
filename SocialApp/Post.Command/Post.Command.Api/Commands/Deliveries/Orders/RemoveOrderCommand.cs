@@ -2,7 +2,7 @@
 
 namespace Post.Command.Api.Commands.Deliveries.Orders;
 
-public class AddOrderCommand : BaseCommand
+public class RemoveOrderCommand : BaseCommand
 {
     public Guid OrderId { get; set; }
 }

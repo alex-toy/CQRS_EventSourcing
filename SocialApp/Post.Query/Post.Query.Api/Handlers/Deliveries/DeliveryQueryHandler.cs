@@ -1,5 +1,4 @@
 ﻿using Post.Query.Api.Queries.Deliveries;
-using Post.Query.Api.Queries.Orders;
 using Post.Query.Domain.Entities.Deliveries;
 using Post.Query.Infrastructure.Repositories.Deliveries;
 
