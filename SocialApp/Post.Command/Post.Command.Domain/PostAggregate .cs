@@ -78,21 +78,13 @@ public class PostAggregate : AggregateRoot
     {
         _active.CheckActiveRule("You cannot edit the message of an inactive post!");
 
-        CheckMessageRule(message, $"The value of {nameof(message)} cannot be null or empty. Please provide a valid {nameof(message)}!");
+        message.CheckMessageRule($"The value of {nameof(message)} cannot be null or empty. Please provide a valid {nameof(message)}!");
 
         RaiseEvent(new PostUpdatedEvent
         {
             AggregateId = _aggregateId,
             Message = message
         });
-    }
-
-    private static void CheckMessageRule(string message, string errorMessage)
-    {
-        if (string.IsNullOrWhiteSpace(message))
-        {
-            throw new InvalidOperationException(errorMessage);
-        }
     }
 
     public void LikePost()

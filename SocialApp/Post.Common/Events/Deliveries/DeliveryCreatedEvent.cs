@@ -8,6 +8,6 @@ public class DeliveryCreatedEvent : Event
     {
     }
 
-    public string DriverName { get; set; }
+    public string DriverName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
 }

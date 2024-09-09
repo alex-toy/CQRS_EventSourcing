@@ -10,6 +10,14 @@ internal static class PostRules
         }
     }
 
+    public static void CheckMessageRule(this string message, string errorMessage)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            throw new InvalidOperationException(errorMessage);
+        }
+    }
+
     public static void CheckCommentRule(this string comment, string errorMessage)
     {
         if (string.IsNullOrWhiteSpace(comment))

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Post.Query.Domain.Entities.Deliveries;
-using Post.Query.Domain.Entities.Orders;
 using Post.Query.Infrastructure.Data;
 
 namespace Post.Query.Infrastructure.Repositories.Deliveries;
@@ -58,10 +57,10 @@ public class DeliveryRepository : IDeliveryRepository
                 .ToListAsync();
     }
 
-    public async Task UpdateAsync(DeliveryDb post)
+    public async Task UpdateAsync(DeliveryDb delivery)
     {
         using DatabaseContext context = _contextFactory.CreateDbContext();
-        context.Deliveries.Update(post);
+        context.Deliveries.Update(delivery);
 
         _ = await context.SaveChangesAsync();
     }

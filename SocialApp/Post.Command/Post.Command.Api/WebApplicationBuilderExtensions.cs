@@ -7,6 +7,7 @@ using Post.Command.Api.Commands.Orders;
 using Post.Command.Api.Commands.Orders.Items;
 using Post.Command.Api.Commands.Posts;
 using Post.Command.Api.Commands.Posts.Comments;
+using Post.Command.Api.Handlers.Deliveries;
 using Post.Command.Api.Handlers.Discounts;
 using Post.Command.Api.Handlers.Orders;
 using Post.Command.Api.Handlers.Orders.Items;
@@ -17,6 +18,7 @@ using Post.Command.Infrastructure;
 using Post.Command.Infrastructure.Configs;
 using Post.Common.Comments;
 using Post.Common.Events.Comments;
+using Post.Common.Events.Deliveries;
 using Post.Common.Events.Orders;
 using Post.Common.Events.Orders.Discounts;
 using Post.Common.Events.Orders.Items;
@@ -50,6 +52,10 @@ public static class WebApplicationBuilderExtensions
         BsonClassMap.RegisterClassMap<DiscountCreatedEvent>();
         BsonClassMap.RegisterClassMap<DiscountUpdatedEvent>();
         BsonClassMap.RegisterClassMap<DiscountDeletedEvent>();
+
+        BsonClassMap.RegisterClassMap<DeliveryCreatedEvent>();
+        BsonClassMap.RegisterClassMap<DeliveryUpdatedEvent>();
+        //BsonClassMap.RegisterClassMap<DeliveryDeletedEvent>();
     }
 
     public static void ConfigureMongo(this WebApplicationBuilder builder)
@@ -71,11 +77,11 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddScoped<IPostCommandHandler, PostCommandHandler>();
         builder.Services.AddScoped<ICommentCommandHandler, CommentCommandHandler>();
 
-        IPostCommandHandler postCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IPostCommandHandler>();
-        dispatcher.RegisterHandler<CreatePostCommand>(postCommandHandler.HandleAsync);
-        dispatcher.RegisterHandler<UpdatePostCommand>(postCommandHandler.HandleAsync);
-        dispatcher.RegisterHandler<LikePostCommand>(postCommandHandler.HandleAsync);
-        dispatcher.RegisterHandler<DeletePostCommand>(postCommandHandler.HandleAsync);
+        IPostCommandHandler commandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IPostCommandHandler>();
+        dispatcher.RegisterHandler<CreatePostCommand>(commandHandler.HandleAsync);
+        dispatcher.RegisterHandler<UpdatePostCommand>(commandHandler.HandleAsync);
+        dispatcher.RegisterHandler<LikePostCommand>(commandHandler.HandleAsync);
+        dispatcher.RegisterHandler<DeletePostCommand>(commandHandler.HandleAsync);
 
         ICommentCommandHandler commentCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<ICommentCommandHandler>();
         dispatcher.RegisterHandler<CreateCommentCommand>(commentCommandHandler.HandleAsync);
@@ -90,10 +96,10 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddScoped<IItemCommandHandler, ItemCommandHandler>();
         builder.Services.AddScoped<IDiscountCommandHandler, DiscountCommandHandler>();
 
-        IOrderCommandHandler orderCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IOrderCommandHandler>();
-        dispatcher.RegisterHandler<CreateOrderCommand>(orderCommandHandler.HandleAsync);
-        dispatcher.RegisterHandler<UpdateOrderCommand>(orderCommandHandler.HandleAsync);
-        dispatcher.RegisterHandler<DeleteOrderCommand>(orderCommandHandler.HandleAsync);
+        IOrderCommandHandler commandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IOrderCommandHandler>();
+        dispatcher.RegisterHandler<CreateOrderCommand>(commandHandler.HandleAsync);
+        dispatcher.RegisterHandler<UpdateOrderCommand>(commandHandler.HandleAsync);
+        dispatcher.RegisterHandler<DeleteOrderCommand>(commandHandler.HandleAsync);
 
         IItemCommandHandler itemCommandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IItemCommandHandler>();
         dispatcher.RegisterHandler<CreateItemCommand>(itemCommandHandler.HandleAsync);
@@ -104,5 +110,16 @@ public static class WebApplicationBuilderExtensions
         dispatcher.RegisterHandler<CreateDiscountCommand>(discountCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<UpdateDiscountCommand>(discountCommandHandler.HandleAsync);
         dispatcher.RegisterHandler<DeleteDiscountCommand>(discountCommandHandler.HandleAsync);
+    }
+
+    public static void ConfigureDeliveries(this WebApplicationBuilder builder, CommandDispatcher dispatcher)
+    {
+        builder.Services.AddScoped<IEventSourcingHandler<DeliveryAggregate>, EventSourcingHandler<DeliveryAggregate>>();
+        builder.Services.AddScoped<IDeliveryCommandHandler, DeliveryCommandHandler>();
+
+        IDeliveryCommandHandler commandHandler = builder.Services.BuildServiceProvider().GetRequiredService<IDeliveryCommandHandler>();
+        dispatcher.RegisterHandler<CreateDeliveryCommand>(commandHandler.HandleAsync);
+        dispatcher.RegisterHandler<UpdateDeliveryCommand>(commandHandler.HandleAsync);
+        //dispatcher.RegisterHandler<DeleteOrderCommand>(commandHandler.HandleAsync);
     }
 }

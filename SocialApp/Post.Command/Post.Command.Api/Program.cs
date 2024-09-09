@@ -13,6 +13,7 @@ CommandDispatcher dispatcher = new();
 
 builder.ConfigurePosts(dispatcher);
 builder.ConfigureOrders(dispatcher);
+builder.ConfigureDeliveries(dispatcher);
 
 builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
 
