@@ -16,14 +16,14 @@ public class PostCommandHandler : IPostCommandHandler
 
     public async Task HandleAsync(CreatePostCommand command)
     {
-        PostAggregate aggregate = new(command.Id, command.Author, command.Message);
+        PostAggregate aggregate = new(command.AggregateId, command.Author, command.Message);
 
         await _eventSourcingHandler.SaveAsync(aggregate);
     }
 
     public async Task HandleAsync(UpdatePostCommand command)
     {
-        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
         aggregate.EditMessage(command.Message);
 
         await _eventSourcingHandler.SaveAsync(aggregate);
@@ -31,7 +31,7 @@ public class PostCommandHandler : IPostCommandHandler
 
     public async Task HandleAsync(LikePostCommand command)
     {
-        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
         aggregate.LikePost();
 
         await _eventSourcingHandler.SaveAsync(aggregate);
@@ -39,7 +39,7 @@ public class PostCommandHandler : IPostCommandHandler
 
     public async Task HandleAsync(DeletePostCommand command)
     {
-        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
         aggregate.DeletePost(command.UserName);
 
         await _eventSourcingHandler.SaveAsync(aggregate);

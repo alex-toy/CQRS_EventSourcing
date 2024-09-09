@@ -15,7 +15,7 @@ public class CommentCommandHandler : ICommentCommandHandler
 
     public async Task HandleAsync(CreateCommentCommand command)
     {
-        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.PostId);
         aggregate.AddComment(command.Comment, command.UserName);
 
         await _eventSourcingHandler.SaveAsync(aggregate);
@@ -23,7 +23,7 @@ public class CommentCommandHandler : ICommentCommandHandler
 
     public async Task HandleAsync(UpdateCommentCommand command)
     {
-        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
         aggregate.EditComment(command.CommentId, command.Comment, command.UserName);
 
         await _eventSourcingHandler.SaveAsync(aggregate);
@@ -31,7 +31,7 @@ public class CommentCommandHandler : ICommentCommandHandler
 
     public async Task HandleAsync(DeleteCommentCommand command)
     {
-        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+        PostAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
         aggregate.RemoveComment(command.CommentId, command.UserName);
 
         await _eventSourcingHandler.SaveAsync(aggregate);

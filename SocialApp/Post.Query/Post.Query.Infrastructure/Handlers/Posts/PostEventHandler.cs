@@ -21,7 +21,7 @@ public class PostEventHandler : IPostEventHandler
     {
         var post = new PostDb
         {
-            PostId = @event.Id,
+            PostId = @event.AggregateId,
             Author = @event.Author,
             DatePosted = @event.DatePosted,
             Message = @event.Message
@@ -32,7 +32,7 @@ public class PostEventHandler : IPostEventHandler
 
     public async Task On(PostUpdatedEvent @event)
     {
-        PostDb post = await _postRepository.GetByIdAsync(@event.Id);
+        PostDb post = await _postRepository.GetByIdAsync(@event.AggregateId);
 
         if (post is null) return;
 
@@ -42,7 +42,7 @@ public class PostEventHandler : IPostEventHandler
 
     public async Task On(PostLikedEvent @event)
     {
-        PostDb post = await _postRepository.GetByIdAsync(@event.Id);
+        PostDb post = await _postRepository.GetByIdAsync(@event.AggregateId);
 
         if (post is null) return;
 
@@ -54,7 +54,7 @@ public class PostEventHandler : IPostEventHandler
     {
         var comment = new CommentDb
         {
-            PostId = @event.Id,
+            PostId = @event.AggregateId,
             CommentId = @event.CommentId,
             CommentDate = @event.CommentDate,
             Comment = @event.Comment,
@@ -85,6 +85,6 @@ public class PostEventHandler : IPostEventHandler
 
     public async Task On(PostDeletedEvent @event)
     {
-        await _postRepository.DeleteAsync(@event.Id);
+        await _postRepository.DeleteAsync(@event.AggregateId);
     }
 }

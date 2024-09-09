@@ -43,7 +43,7 @@ public class EventSourcingHandler<T> : IEventSourcingHandler<T> where T : Aggreg
 
             foreach (var @event in events)
             {
-                var topic = Environment.GetEnvironmentVariable("KAFKA_TOPIC");
+                string? topic = Environment.GetEnvironmentVariable("KAFKA_TOPIC")!;
                 await _eventProducer.ProduceAsync(topic, @event);
             }
         }

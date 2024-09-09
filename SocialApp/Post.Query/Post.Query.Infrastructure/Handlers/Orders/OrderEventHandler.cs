@@ -23,7 +23,7 @@ public class OrderEventHandler : IOrderEventHandler
     {
         var order = new OrderDb
         {
-            OrderId = @event.Id,
+            OrderId = @event.AggregateId,
             Author = @event.Author,
             Address = @event.Address,
             IsEmergency = @event.IsEmergency,
@@ -35,7 +35,7 @@ public class OrderEventHandler : IOrderEventHandler
 
     public async Task On(OrderUpdatedEvent @event)
     {
-        OrderDb order = await _orderRepository.GetByIdAsync(@event.Id);
+        OrderDb? order = await _orderRepository.GetByIdAsync(@event.AggregateId);
 
         if (order is null) return;
 
@@ -46,14 +46,14 @@ public class OrderEventHandler : IOrderEventHandler
 
     public async Task On(OrderDeletedEvent @event)
     {
-        await _orderRepository.DeleteAsync(@event.Id);
+        await _orderRepository.DeleteAsync(@event.AggregateId);
     }
 
     public async Task On(ItemCreatedEvent @event)
     {
         var comment = new ItemDb
         {
-            OrderId = @event.Id,
+            OrderId = @event.AggregateId,
             ItemId = @event.ItemId,
             Label = @event.Label,
             Price = @event.Price,
@@ -85,7 +85,7 @@ public class OrderEventHandler : IOrderEventHandler
     {
         var discount = new DiscountDb
         {
-            OrderId = @event.Id,
+            OrderId = @event.AggregateId,
             LowerThreshold = @event.LowerThreshold,
             UpperThreshold = @event.UpperThreshold,
             Percentage = @event.Percentage

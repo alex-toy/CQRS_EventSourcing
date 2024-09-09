@@ -21,7 +21,7 @@ public class OrderAggregate : AggregateRoot
     {
         RaiseEvent(new OrderCreatedEvent
         {
-            Id = id,
+            AggregateId = id,
             Author = author,
             Address = address,
             IsEmergency = isEmergency,
@@ -31,35 +31,35 @@ public class OrderAggregate : AggregateRoot
 
     public void Apply(OrderCreatedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _author = @event.Author;
     }
 
     public void Apply(OrderUpdatedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
     }
 
     public void Apply(OrderDeletedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
     }
 
     public void Apply(ItemCreatedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _items.Add(@event.ItemId, new ItemBo { Label = @event.Label, Price = @event.Price, Quantity = @event.Quantity });
     }
 
     public void Apply(ItemUpdatedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _items[@event.ItemId] = new ItemBo { Label = @event.Label, Price = @event.Price, Quantity = @event.Quantity };
     }
 
     public void Apply(ItemDeletedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _items.Remove(@event.ItemId);
     }
 
@@ -69,7 +69,7 @@ public class OrderAggregate : AggregateRoot
 
         RaiseEvent(new OrderUpdatedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             Address = address,
             IsEmergency = isEmergency
         });
@@ -81,7 +81,7 @@ public class OrderAggregate : AggregateRoot
 
         RaiseEvent(new OrderDeletedEvent
         {
-            Id = _id
+            AggregateId = _aggregateId
         });
     }
 
@@ -91,7 +91,7 @@ public class OrderAggregate : AggregateRoot
 
         RaiseEvent(new ItemCreatedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             ItemId = Guid.NewGuid(),
             Label = label,
             Quantity = quantity,
@@ -105,7 +105,7 @@ public class OrderAggregate : AggregateRoot
 
         RaiseEvent(new ItemUpdatedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             ItemId = itemId,
             Price = price,
             Label = label,
@@ -118,7 +118,7 @@ public class OrderAggregate : AggregateRoot
     {
         RaiseEvent(new ItemDeletedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             ItemId = itemId
         });
     }
@@ -128,7 +128,7 @@ public class OrderAggregate : AggregateRoot
         _discount.CheckDiscountUnicityRule();
         @event.CheckDiscountRules();
 
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _discount = new DiscountBo
         {
             LowerThreshold = @event.LowerThreshold,
@@ -141,7 +141,7 @@ public class OrderAggregate : AggregateRoot
     {
         @event.CheckDiscountRules();
 
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _discount = new DiscountBo
         {
             LowerThreshold = @event.LowerThreshold,
@@ -152,7 +152,7 @@ public class OrderAggregate : AggregateRoot
 
     public void Apply(DiscountDeletedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _discount = null;
     }
 
@@ -160,7 +160,7 @@ public class OrderAggregate : AggregateRoot
     {
         RaiseEvent(new DiscountCreatedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             DiscountId = Guid.NewGuid(),
             LowerThreshold = lowerThreshold,
             UpperThreshold = upperThreshold,
@@ -172,7 +172,7 @@ public class OrderAggregate : AggregateRoot
     {
         RaiseEvent(new DiscountUpdatedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             DiscountId = discountId,
             LowerThreshold = lowerThreshold,
             UpperThreshold = upperThreshold,
@@ -185,7 +185,7 @@ public class OrderAggregate : AggregateRoot
     {
         RaiseEvent(new DiscountDeletedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             DiscountId = discountId
         });
     }

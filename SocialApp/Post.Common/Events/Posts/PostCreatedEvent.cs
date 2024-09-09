@@ -8,7 +8,7 @@ public class PostCreatedEvent : Event
     {
     }
 
-    public string Author { get; set; }
-    public string Message { get; set; }
+    public string Author { get; set; } = String.Empty;
+    public string Message { get; set; } = String.Empty;
     public DateTime DatePosted { get; set; }
 }

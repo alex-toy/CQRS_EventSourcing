@@ -10,7 +10,7 @@ namespace Post.Command.Domain;
 public class PostAggregate : AggregateRoot
 {
     private bool _active;
-    private string _author;
+    private string _author = string.Empty;
     private readonly Dictionary<Guid, CommentBo> _comments = new();
 
     public override bool Active
@@ -26,7 +26,7 @@ public class PostAggregate : AggregateRoot
     {
         RaiseEvent(new PostCreatedEvent
         {
-            Id = id,
+            AggregateId = id,
             Author = author,
             Message = message,
             DatePosted = DateTime.Now
@@ -35,42 +35,42 @@ public class PostAggregate : AggregateRoot
 
     public void Apply(PostCreatedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _active = true;
         _author = @event.Author;
     }
 
     public void Apply(PostUpdatedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
     }
 
     public void Apply(PostDeletedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _active = false;
     }
 
     public void Apply(PostLikedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
     }
 
     public void Apply(CommentCreatedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _comments.Add(@event.CommentId, new CommentBo { Author = @event.Username, Message = @event.Comment });
     }
 
     public void Apply(CommentUpdatedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _comments[@event.CommentId] = new CommentBo { Author = @event.Username, Message = @event.Comment };
     }
 
     public void Apply(CommentDeletedEvent @event)
     {
-        _id = @event.Id;
+        _aggregateId = @event.AggregateId;
         _comments.Remove(@event.CommentId);
     }
 
@@ -82,7 +82,7 @@ public class PostAggregate : AggregateRoot
 
         RaiseEvent(new PostUpdatedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             Message = message
         });
     }
@@ -101,7 +101,7 @@ public class PostAggregate : AggregateRoot
 
         RaiseEvent(new PostLikedEvent
         {
-            Id = _id
+            AggregateId = _aggregateId
         });
     }
 
@@ -113,7 +113,7 @@ public class PostAggregate : AggregateRoot
 
         RaiseEvent(new CommentCreatedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             CommentId = Guid.NewGuid(),
             Comment = comment,
             Username = username,
@@ -129,7 +129,7 @@ public class PostAggregate : AggregateRoot
 
         RaiseEvent(new CommentUpdatedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             CommentId = commentId,
             Comment = comment,
             Username = username,
@@ -145,7 +145,7 @@ public class PostAggregate : AggregateRoot
 
         RaiseEvent(new CommentDeletedEvent
         {
-            Id = _id,
+            AggregateId = _aggregateId,
             CommentId = commentId
         });
     }
@@ -158,7 +158,7 @@ public class PostAggregate : AggregateRoot
 
         RaiseEvent(new PostDeletedEvent
         {
-            Id = _id
+            AggregateId = _aggregateId
         });
     }
 }

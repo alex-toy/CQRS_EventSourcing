@@ -5,13 +5,13 @@ namespace CQRS.Core.Domain;
 
 public abstract class AggregateRoot
 {
-    protected Guid _id;
+    protected Guid _aggregateId;
     private readonly List<Event> _changes = new();
     public virtual bool Active { get; set; }
 
     public Guid Id
     {
-        get { return _id; }
+        get { return _aggregateId; }
     }
 
     public int Version { get; set; } = -1;

@@ -20,7 +20,7 @@ public class DeliveryEventHandler : IDeliveryEventHandler
     {
         var delivery = new DeliveryDb
         {
-            DeliveryId = @event.Id,
+            DeliveryId = @event.AggregateId,
             DriverName = @event.DriverName,
             CreatedAt = @event.CreatedAt
         };

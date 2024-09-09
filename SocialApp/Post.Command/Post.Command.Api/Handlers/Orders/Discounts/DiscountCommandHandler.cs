@@ -15,7 +15,7 @@ public class DiscountCommandHandler : IDiscountCommandHandler
 
     public async Task HandleAsync(CreateDiscountCommand command)
     {
-        OrderAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+        OrderAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
         aggregate.CreateDiscount(command.LowerThreshold, command.UpperThreshold, command.Percentage);
 
         await _eventSourcingHandler.SaveAsync(aggregate);
@@ -23,7 +23,7 @@ public class DiscountCommandHandler : IDiscountCommandHandler
 
     public async Task HandleAsync(UpdateDiscountCommand command)
     {
-        OrderAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+        OrderAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
         aggregate.UpdateDiscount(command.DiscountId, command.LowerThreshold, command.UpperThreshold, command.Percentage);
 
         await _eventSourcingHandler.SaveAsync(aggregate);
@@ -31,7 +31,7 @@ public class DiscountCommandHandler : IDiscountCommandHandler
 
     public async Task HandleAsync(DeleteDiscountCommand command)
     {
-        OrderAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+        OrderAggregate aggregate = await _eventSourcingHandler.GetByIdAsync(command.AggregateId);
         aggregate.DeleteDiscount(command.DiscountId);
 
         await _eventSourcingHandler.SaveAsync(aggregate);

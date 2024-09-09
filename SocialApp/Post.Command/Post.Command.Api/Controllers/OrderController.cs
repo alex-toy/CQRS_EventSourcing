@@ -25,7 +25,7 @@ namespace Post.Cmd.Api.Controllers
         public async Task<ActionResult> CreateOrderAsync(CreateOrderCommand command)
         {
             Guid id = Guid.NewGuid();
-            command.Id = id;
+            command.AggregateId = id;
             try
             {
                 await _commandDispatcher.SendAsync(command);
@@ -62,7 +62,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -103,7 +103,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -144,7 +144,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -185,7 +185,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -226,7 +226,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -267,7 +267,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -294,6 +294,46 @@ namespace Post.Cmd.Api.Controllers
             catch (Exception ex)
             {
                 const string SAFE_ERROR_MESSAGE = "Error while processing request to add an discount to an order!";
+                _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
+                {
+                    Message = SAFE_ERROR_MESSAGE
+                });
+            }
+        }
+
+        [HttpDelete("DeleteDiscount")]
+        public async Task<ActionResult> DeleteDiscountAsync(DeleteDiscountCommand command)
+        {
+            try
+            {
+                await _commandDispatcher.SendAsync(command);
+
+                return Ok(new BaseResponse
+                {
+                    Message = "Remove discount request completed successfully!"
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Client made a bad request!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (AggregateNotFoundException ex)
+            {
+                _logger.Log(LogLevel.Warning, ex, "Could not retrieve aggregate, client passed an incorrect post ID targetting the aggregate!");
+                return BadRequest(new BaseResponse
+                {
+                    Message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                const string SAFE_ERROR_MESSAGE = "Error while processing request to remove an item from a discount!";
                 _logger.Log(LogLevel.Error, ex, SAFE_ERROR_MESSAGE);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse

@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using CQRS.Core.Events;
 using MongoDB.Bson.Serialization;
+using Post.Command.Api.Commands.Deliveries;
 using Post.Command.Api.Commands.Discounts;
 using Post.Command.Api.Commands.Orders;
 using Post.Command.Api.Commands.Orders.Items;

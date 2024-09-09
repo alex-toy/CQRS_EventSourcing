@@ -24,7 +24,7 @@ namespace Post.Cmd.Api.Controllers
         public async Task<ActionResult> CreatePostAsync(CreatePostCommand command)
         {
             Guid id = Guid.NewGuid();
-            command.Id = id;
+            command.AggregateId = id;
             try
             {
                 await _commandDispatcher.SendAsync(command);
@@ -61,7 +61,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -102,7 +102,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                await _commandDispatcher.SendAsync(new LikePostCommand { Id = id });
+                await _commandDispatcher.SendAsync(new LikePostCommand { AggregateId = id });
 
                 return Ok(new BaseResponse
                 {
@@ -142,7 +142,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -183,7 +183,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.PostId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -224,7 +224,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
@@ -265,7 +265,7 @@ namespace Post.Cmd.Api.Controllers
         {
             try
             {
-                command.Id = id;
+                command.AggregateId = id;
                 await _commandDispatcher.SendAsync(command);
 
                 return Ok(new BaseResponse
